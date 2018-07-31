@@ -1,0 +1,23 @@
+Create Record with Source Location (0,375)
+Calculating Wave solution with FD2 .... 
+Calculating Wavefield ... 0.0%
+Calculating Wavefield ... 10.0%
+Calculating Wavefield ... 19.9%
+Calculating Wavefield ... 29.9%
+Calculating Wavefield ... 39.8%
+Calculating Wavefield ... 49.8%
+Calculating Wavefield ... 59.8%
+Calculating Wavefield ... 69.7%
+Calculating Wavefield ... 79.7%
+Calculating Wavefield ... 89.6%
+Writing Wavefield ... 0.0%
+Writing Wavefield ... 10.0%
+Writing Wavefield ... 20.0%
+Writing Wavefield ... 30.0%
+Writing Wavefield ... 40.0%
+Writing Wavefield ... 50.0%
+Writing Wavefield ... 60.0%
+Writing Wavefield ... 70.0%
+Writing Wavefield ... 80.0%
+Writing Wavefield ... 90.0%
+Writing is done

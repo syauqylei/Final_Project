@@ -1,0 +1,113 @@
+==14567== NVPROF is profiling process 14567, command: ./wve_nacd coba vel.txt fwdset.txt
+==14567== Profiling application: ./wve_nacd coba vel.txt fwdset.txt
+==14567== Profiling result:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 84.94%  689.69ms     15568  44.301us  4.0000us  253.00us  habc_75_gpu(int, int, double**, double*, int*, int*)
+  8.00%  64.946ms       903  71.922us  37.217us  243.40us  gen_cfabc_59_gpu(double*, double, double, double, double*)
+  3.11%  25.243ms     15568  1.6210us  1.4720us  11.904us  habc_79_gpu__red(int, int, double**, double*, int*, int*)
+  1.59%  12.902ms     18281     705ns     512ns  2.0800us  [CUDA memcpy HtoD]
+  1.58%  12.810ms     16471     777ns     640ns  9.3760us  [CUDA memcpy DtoH]
+  0.57%  4.6238ms       903  5.1200us  4.8320us  65.762us  gen_cfabc_50_gpu(double*, double, double, double, double*)
+  0.13%  1.0960ms         1  1.0960ms  1.0960ms  1.0960ms  wvenacd_35_gpu(double*, int, int, int, double, double, double, double)
+  0.04%  315.47us         3  105.16us  99.524us  112.10us  gen_sstep_22_gpu(int*, int)
+  0.03%  219.02us         1  219.02us  219.02us  219.02us  wvenacd_53_gpu(double*, int, int, int, double, double, double, double)
+  0.01%  98.979us         1  98.979us  98.979us  98.979us  gen_tstep_37_gpu(int*)
+
+==14567== Unified Memory profiling result:
+Device "GeForce GTX 1080 Ti (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+   40015  6.6182KB  4.0000KB  656.00KB  258.6367MB  59.49312ms  Host To Device
+   37167  6.8584KB  4.0000KB  508.00KB  248.9336MB  37.49853ms  Device To Host
+   31738         -         -         -           -  155.9528ms  GPU Page fault groups
+Total CPU Page faults: 17080
+
+==14567== API calls:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 53.95%  768.62ms     16471  46.665us  3.1130us  270.78us  cuMemcpyDtoHAsync
+ 19.05%  271.38ms     32948  8.2360us  3.2090us  241.49us  cuLaunchKernel
+  9.18%  130.73ms         1  130.73ms  130.73ms  130.73ms  cuDevicePrimaryCtxRetain
+  8.10%  115.39ms     35661  3.2350us     516ns  1.0949ms  cuStreamSynchronize
+  5.02%  71.509ms     18281  3.9110us  2.2390us  212.16us  cuMemcpyHtoDAsync
+  2.30%  32.762ms    133602     245ns     172ns  203.86us  cuPointerGetAttributes
+  1.45%  20.667ms         1  20.667ms  20.667ms  20.667ms  cuMemAllocManaged
+  0.69%  9.8699ms         1  9.8699ms  9.8699ms  9.8699ms  cuMemHostAlloc
+  0.10%  1.4651ms       903  1.6220us  1.3590us  4.7250us  cuEventRecord
+  0.04%  639.48us       903     708ns     587ns  4.8110us  cuEventSynchronize
+  0.04%  569.72us         5  113.94us  6.3510us  220.09us  cuMemAlloc
+  0.03%  459.78us         1  459.78us  459.78us  459.78us  cuMemAllocHost
+  0.02%  275.46us         2  137.73us  135.43us  140.03us  cuDeviceTotalMem
+  0.02%  245.88us         1  245.88us  245.88us  245.88us  cuModuleLoadData
+  0.00%  17.552us         1  17.552us  17.552us  17.552us  cuStreamCreate
+  0.00%  3.4910us         8     436ns     187ns  1.3370us  cuModuleGetFunction
+  0.00%  2.7420us         2  1.3710us     681ns  2.0610us  cuEventCreate
+  0.00%  1.7080us         3     569ns     158ns  1.3590us  cuDeviceGetCount
+  0.00%  1.5570us         6     259ns     126ns     533ns  cuDeviceGet
+  0.00%  1.3400us         8     167ns     132ns     212ns  cuDeviceGetAttribute
+  0.00%  1.1760us         3     392ns     188ns     698ns  cuCtxSetCurrent
+  0.00%     395ns         1     395ns     395ns     395ns  cuMemFree
+  0.00%     377ns         2     188ns     157ns     220ns  cuDeviceComputeCapability
+  0.00%     206ns         1     206ns     206ns     206ns  cuCtxGetCurrent
+
+==14567== OpenACC (excl):
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 53.85%  776.85ms     15568  49.900us  9.0350us  271.56us  acc_enqueue_download@abcon.cc:75
+ 14.29%  206.15ms     15568  13.242us  11.885us  242.77us  acc_enqueue_launch@abcon.cc:75 (_Z11habc_75_gpuiiPPdS_PiS1_)
+  4.90%  70.657ms     15568  4.5380us  4.0390us  236.42us  acc_enqueue_launch@abcon.cc:75 (_Z16habc_79_gpu__rediiPPdS_PiS1_)
+  4.80%  69.256ms     15568  4.4480us  3.7830us  212.73us  acc_enqueue_upload@abcon.cc:73
+  4.70%  67.738ms       903  75.013us  39.851us  302.33us  acc_wait@abcon.cc:59
+  3.52%  50.841ms     31136  1.6320us     957ns  235.54us  acc_wait@abcon.cc:75
+  2.78%  40.157ms     15569  2.5790us  1.8190us  232.13us  acc_enter_data@abcon.cc:73
+  2.41%  34.750ms     15568  2.2320us  1.9800us  234.92us  acc_exit_data@abcon.cc:73
+  2.21%  31.828ms     15568  2.0440us  1.7420us  261.32us  acc_compute_construct@abcon.cc:73
+  1.07%  15.416ms       903  17.072us  12.201us  60.985us  acc_enqueue_launch@abcon.cc:50 (_Z16gen_cfabc_50_gpuPddddS_)
+  0.89%  12.822ms       903  14.198us  11.245us  57.654us  acc_enqueue_launch@abcon.cc:59 (_Z16gen_cfabc_59_gpuPddddS_)
+  0.70%  10.091ms         3  3.3637ms  3.6310us  10.082ms  acc_enter_data@abcon.cc:19
+  0.47%  6.8175ms       903  7.5490us  6.5490us  68.454us  acc_wait@abcon.cc:50
+  0.44%  6.3859ms      1806  3.5350us  2.6960us  15.965us  acc_enqueue_upload@abcon.cc:57
+  0.40%  5.7060ms       903  6.3180us  5.3220us  13.540us  acc_enqueue_download@abcon.cc:54
+  0.37%  5.4072ms       903  5.9870us  5.0780us  10.398us  acc_enqueue_upload@abcon.cc:48
+  0.29%  4.1302ms       903  4.5730us  3.6020us  5.8750us  acc_wait@abcon.cc:48
+  0.29%  4.1262ms       903  4.5690us  3.8400us  12.011us  acc_enter_data@abcon.cc:57
+  0.28%  4.0828ms       903  4.5210us  3.2190us  356.42us  acc_enter_data@abcon.cc:48
+  0.27%  3.9154ms       903  4.3350us  2.5480us  8.3900us  acc_wait@abcon.cc:54
+  0.27%  3.9005ms       903  4.3190us  3.8930us  17.433us  acc_wait@abcon.cc:57
+  0.25%  3.5698ms       903  3.9530us  2.9760us  213.59us  acc_exit_data@abcon.cc:48
+  0.24%  3.5112ms       903  3.8880us  3.3160us  6.5690us  acc_exit_data@abcon.cc:57
+  0.08%  1.0976ms         1  1.0976ms  1.0976ms  1.0976ms  acc_wait@wavesim.cc:35
+  0.07%  1.0391ms       903  1.1500us     922ns  2.0250us  acc_compute_construct@abcon.cc:57
+  0.07%  1.0347ms       903  1.1450us     921ns  1.9880us  acc_compute_construct@abcon.cc:48
+  0.02%  323.88us         3  107.96us  102.13us  114.53us  acc_wait@abcon.cc:22
+  0.02%  253.67us         1  253.67us  253.67us  253.67us  acc_device_init
+  0.02%  220.55us         1  220.55us  220.55us  220.55us  acc_wait@wavesim.cc:53
+  0.01%  110.70us         1  110.70us  110.70us  110.70us  acc_enqueue_launch@wavesim.cc:53 (_Z14wvenacd_53_gpuPdiiidddd)
+  0.01%  101.26us         1  101.26us  101.26us  101.26us  acc_wait@abcon.cc:37
+  0.01%  92.093us         3  30.697us  13.925us  43.629us  acc_enqueue_launch@abcon.cc:22 (_Z16gen_sstep_22_gpuPii)
+  0.01%  90.528us         1  90.528us  90.528us  90.528us  acc_enqueue_launch@wavesim.cc:35 (_Z14wvenacd_35_gpuPdiiidddd)
+  0.00%  47.752us         1  47.752us  47.752us  47.752us  acc_enqueue_launch@abcon.cc:37 (_Z16gen_tstep_37_gpuPi)
+  0.00%  44.466us         3  14.822us  5.5660us  20.398us  acc_enqueue_upload@abcon.cc:19
+  0.00%  18.946us         3  6.3150us  2.6960us  13.244us  acc_exit_data@abcon.cc:19
+  0.00%  13.768us         3  4.5890us  3.9330us  5.6860us  acc_wait@abcon.cc:19
+  0.00%  9.5020us         1  9.5020us  9.5020us  9.5020us  acc_compute_construct@wavesim.cc:35
+  0.00%  7.0230us         1  7.0230us  7.0230us  7.0230us  acc_enter_data@wavesim.cc:35
+  0.00%  5.7670us         1  5.7670us  5.7670us  5.7670us  acc_enqueue_upload@abcon.cc:34
+  0.00%  4.8020us         1  4.8020us  4.8020us  4.8020us  acc_enter_data@abcon.cc:34
+  0.00%  4.7710us         3  1.5900us  1.0710us  2.5060us  acc_compute_construct@abcon.cc:19
+  0.00%  4.4070us         1  4.4070us  4.4070us  4.4070us  acc_enter_data@wavesim.cc:53
+  0.00%  4.1470us         1  4.1470us  4.1470us  4.1470us  acc_wait@abcon.cc:34
+  0.00%  3.5360us         1  3.5360us  3.5360us  3.5360us  acc_exit_data@wavesim.cc:35
+  0.00%  2.7980us         1  2.7980us  2.7980us  2.7980us  acc_exit_data@abcon.cc:34
+  0.00%  2.0360us         1  2.0360us  2.0360us  2.0360us  acc_compute_construct@wavesim.cc:53
+  0.00%  1.9020us         1  1.9020us  1.9020us  1.9020us  acc_exit_data@wavesim.cc:53
+  0.00%  1.2800us         1  1.2800us  1.2800us  1.2800us  acc_compute_construct@abcon.cc:34
+  0.00%       0ns         1       0ns       0ns       0ns  acc_create@abcon.cc:34
+  0.00%       0ns      1806       0ns       0ns       0ns  acc_delete@abcon.cc:68
+  0.00%       0ns         3       0ns       0ns       0ns  acc_delete@abcon.cc:27
+  0.00%       0ns       903       0ns       0ns       0ns  acc_create@abcon.cc:48
+  0.00%       0ns         1       0ns       0ns       0ns  acc_alloc@abcon.cc:57
+  0.00%       0ns      1806       0ns       0ns       0ns  acc_create@abcon.cc:57
+  0.00%       0ns         1       0ns       0ns       0ns  acc_alloc@abcon.cc:19
+  0.00%       0ns         3       0ns       0ns       0ns  acc_create@abcon.cc:19
+  0.00%       0ns         1       0ns       0ns       0ns  acc_delete@abcon.cc:42
+  0.00%       0ns       903       0ns       0ns       0ns  acc_delete@abcon.cc:54
+==14567== Warning: Some profiling data are not recorded. Make sure cudaProfilerStop() or cuProfilerStop() is called before application exit to flush profile data.
+======== Error: Application received signal 11

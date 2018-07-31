@@ -1,0 +1,458 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 11.11      0.33     0.33        1     0.33     2.69  wvenacd(double*, int, int, int, double, double, double, double)
+ 10.40      0.64     0.31 18120200     0.00     0.00  d5y(double*, double*, int, int, double)
+  8.84      0.90     0.26 18120200     0.00     0.00  d2x2y(double*, double*, double*, int, int, double)
+  8.42      1.15     0.25 18120200     0.00     0.00  d5x(double*, double*, int, int, double)
+  7.74      1.38     0.23 18120200     0.00     0.00  d4xy(double*, double*, int, int, double)
+  7.41      1.60     0.22   541800     0.00     0.00  habc(double**, int, int, double*, int*, int*, int)
+  7.15      1.81     0.21                             ___Z6d2xd2yPdiidEND
+  7.07      2.02     0.21 18120200     0.00     0.00  dx4y(double*, double*, int, int, double)
+  6.99      2.23     0.21 54360600     0.00     0.00  d2xd2y(double*, int, int, double)
+  6.40      2.42     0.19 18120200     0.00     0.00  d2x3y(double*, double*, int, int, double)
+  6.40      2.61     0.19 18120200     0.00     0.00  d3x2y(double*, double*, int, int, double)
+  4.97      2.76     0.15 18120200     0.00     0.00  d4y(double*, double*, int, int, double)
+  4.80      2.90     0.14 18120200     0.00     0.00  d4x(double*, double*, int, int, double)
+  1.01      2.93     0.03                             _init
+  0.76      2.95     0.02                             ___Z3d4yPdS_iidEND
+  0.25      2.96     0.01                             ___Z3d4xPdS_iidEND
+  0.25      2.97     0.01                             ___Z5d2x2yPdS_S_iidEND
+  0.04      2.97     0.00                             ___Z3d5yPdS_iidEND
+  0.00      2.97     0.00   722400     0.00     0.00  qt(double, double)
+  0.00      2.97     0.00   722400     0.00     0.00  qx(double, double)
+  0.00      2.97     0.00   180600     0.00     0.00  cfl(double, double, double)
+  0.00      2.97     0.00   180600     0.00     0.00  gen_cfabc(double, double*, double*, int*)
+  0.00      2.97     0.00    60200     0.00     0.00  std::fixed(std::ios_base&)
+  0.00      2.97     0.00      201     0.00     0.00  std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)
+  0.00      2.97     0.00       36     0.00     0.00  decltype (__miter_base(({parm#1}.base)())) std::__miter_base<double*>(std::move_iterator<double*>)
+  0.00      2.97     0.00       18     0.00     0.00  void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&)
+  0.00      2.97     0.00       18     0.00     0.00  double* std::__uninitialized_move_if_noexcept_a<double*, double*, std::allocator<double> >(double*, double*, double*, std::allocator<double>&)
+  0.00      2.97     0.00        5     0.00     0.00  std::basic_ios<char, std::char_traits<char> >::~basic_ios()
+  0.00      2.97     0.00        4     0.00     0.00  free_mat_mem(double**)
+  0.00      2.97     0.00        4     0.00     0.00  alloc_mat(int, int)
+  0.00      2.97     0.00        4     0.00     0.00  std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf()
+  0.00      2.97     0.00        4     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag)
+  0.00      2.97     0.00        4     0.00     0.00  decltype (__miter_base(({parm#1}.base)())) std::__miter_base<int*>(std::move_iterator<int*>)
+  0.00      2.97     0.00        3     0.00     0.00  void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag)
+  0.00      2.97     0.00        2     0.00     0.00  std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode)
+  0.00      2.97     0.00        2     0.00     0.00  std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode)
+  0.00      2.97     0.00        2     0.00     0.00  std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream()
+  0.00      2.97     0.00        2     0.00     0.00  std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream()
+  0.00      2.97     0.00        2     0.00     0.00  std::vector<double, std::allocator<double> >::vector()
+  0.00      2.97     0.00        2     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
+  0.00      2.97     0.00        2     0.00     0.00  int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&)
+  0.00      2.97     0.00        2     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  0.00      2.97     0.00        1     0.00     0.00  read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&)
+  0.00      2.97     0.00        1     0.00     0.00  write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int)
+  0.00      2.97     0.00        1     0.00     0.00  read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&)
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const
+  0.00      2.97     0.00        1     0.00     0.00  std::basic_iostream<char, std::char_traits<char> >::basic_iostream()
+  0.00      2.97     0.00        1     0.00     0.00  std::vector<int, std::allocator<int> >::vector()
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode)
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode)
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_stringstream()
+  0.00      2.97     0.00        1     0.00     0.00  std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+  0.00      2.97     0.00        1     0.00     0.00  __sti___10_wavesim_cc_33591591
+  0.00      2.97     0.00        1     0.00     0.00  __sti___11_arrayman_cc_8626151e
+  0.00      2.97     0.00        1     0.00     0.00  __sti___6_rnw_cc_5ebbe28c
+  0.00      2.97     0.00        1     0.00     0.00  __sti___7_main_cc_main
+  0.00      2.97     0.00        1     0.00     0.00  __sti___8_abcon_cc__Z2qxdd
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 16 byte(s) for 0.34% of 2.97 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     90.5    0.00    2.69                 main [1]
+                0.33    2.36       1/1           wvenacd(double*, int, int, int, double, double, double, double) [2]
+                0.00    0.00       2/4           void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [37]
+                0.00    0.00       1/5           std::basic_ios<char, std::char_traits<char> >::~basic_ios() [33]
+                0.00    0.00       1/4           free_mat_mem(double**) [34]
+                0.00    0.00       1/1           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+                0.00    0.00       1/1           std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_stringstream() [57]
+                0.00    0.00       1/1           std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const [51]
+                0.00    0.00       1/1           std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [55]
+                0.00    0.00       1/2           std::vector<double, std::allocator<double> >::vector() [44]
+                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [58]
+                0.00    0.00       1/1           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+                0.00    0.00       1/1           read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+                0.00    0.00       1/1           std::vector<int, std::allocator<int> >::vector() [53]
+-----------------------------------------------
+                0.33    2.36       1/1           main [1]
+[2]     90.5    0.33    2.36       1         wvenacd(double*, int, int, int, double, double, double, double) [2]
+                0.31    0.00 18120200/18120200     d5y(double*, double*, int, int, double) [3]
+                0.26    0.00 18120200/18120200     d2x2y(double*, double*, double*, int, int, double) [4]
+                0.25    0.00 18120200/18120200     d5x(double*, double*, int, int, double) [5]
+                0.23    0.00 18120200/18120200     d4xy(double*, double*, int, int, double) [6]
+                0.22    0.00  541800/541800      habc(double**, int, int, double*, int*, int*, int) [7]
+                0.21    0.00 18120200/18120200     dx4y(double*, double*, int, int, double) [9]
+                0.21    0.00 54360600/54360600     d2xd2y(double*, int, int, double) [10]
+                0.19    0.00 18120200/18120200     d2x3y(double*, double*, int, int, double) [11]
+                0.19    0.00 18120200/18120200     d3x2y(double*, double*, int, int, double) [12]
+                0.15    0.00 18120200/18120200     d4y(double*, double*, int, int, double) [13]
+                0.14    0.00 18120200/18120200     d4x(double*, double*, int, int, double) [14]
+                0.00    0.00  180600/180600      cfl(double, double, double) [26]
+                0.00    0.00  180600/180600      gen_cfabc(double, double*, double*, int*) [27]
+                0.00    0.00       4/4           alloc_mat(int, int) [35]
+                0.00    0.00       3/4           free_mat_mem(double**) [34]
+-----------------------------------------------
+                0.31    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[3]     10.4    0.31    0.00 18120200         d5y(double*, double*, int, int, double) [3]
+-----------------------------------------------
+                0.26    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[4]      8.8    0.26    0.00 18120200         d2x2y(double*, double*, double*, int, int, double) [4]
+-----------------------------------------------
+                0.25    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[5]      8.4    0.25    0.00 18120200         d5x(double*, double*, int, int, double) [5]
+-----------------------------------------------
+                0.23    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[6]      7.7    0.23    0.00 18120200         d4xy(double*, double*, int, int, double) [6]
+-----------------------------------------------
+                0.22    0.00  541800/541800      wvenacd(double*, int, int, int, double, double, double, double) [2]
+[7]      7.4    0.22    0.00  541800         habc(double**, int, int, double*, int*, int*, int) [7]
+-----------------------------------------------
+                                                 <spontaneous>
+[8]      7.2    0.21    0.00                 ___Z6d2xd2yPdiidEND [8]
+-----------------------------------------------
+                0.21    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[9]      7.1    0.21    0.00 18120200         dx4y(double*, double*, int, int, double) [9]
+-----------------------------------------------
+                0.21    0.00 54360600/54360600     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[10]     7.0    0.21    0.00 54360600         d2xd2y(double*, int, int, double) [10]
+-----------------------------------------------
+                0.19    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[11]     6.4    0.19    0.00 18120200         d2x3y(double*, double*, int, int, double) [11]
+-----------------------------------------------
+                0.19    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[12]     6.4    0.19    0.00 18120200         d3x2y(double*, double*, int, int, double) [12]
+-----------------------------------------------
+                0.15    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[13]     5.0    0.15    0.00 18120200         d4y(double*, double*, int, int, double) [13]
+-----------------------------------------------
+                0.14    0.00 18120200/18120200     wvenacd(double*, int, int, int, double, double, double, double) [2]
+[14]     4.8    0.14    0.00 18120200         d4x(double*, double*, int, int, double) [14]
+-----------------------------------------------
+                                                 <spontaneous>
+[15]     1.0    0.03    0.00                 _init [15]
+-----------------------------------------------
+                                                 <spontaneous>
+[16]     0.8    0.02    0.00                 ___Z3d4yPdS_iidEND [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.3    0.01    0.00                 ___Z3d4xPdS_iidEND [17]
+-----------------------------------------------
+                                                 <spontaneous>
+[18]     0.3    0.01    0.00                 ___Z5d2x2yPdS_S_iidEND [18]
+-----------------------------------------------
+                                                 <spontaneous>
+[19]     0.0    0.00    0.00                 ___Z3d5yPdS_iidEND [19]
+-----------------------------------------------
+                0.00    0.00  722400/722400      gen_cfabc(double, double*, double*, int*) [27]
+[24]     0.0    0.00    0.00  722400         qt(double, double) [24]
+-----------------------------------------------
+                0.00    0.00  722400/722400      gen_cfabc(double, double*, double*, int*) [27]
+[25]     0.0    0.00    0.00  722400         qx(double, double) [25]
+-----------------------------------------------
+                0.00    0.00  180600/180600      wvenacd(double*, int, int, int, double, double, double, double) [2]
+[26]     0.0    0.00    0.00  180600         cfl(double, double, double) [26]
+-----------------------------------------------
+                0.00    0.00  180600/180600      wvenacd(double*, int, int, int, double, double, double, double) [2]
+[27]     0.0    0.00    0.00  180600         gen_cfabc(double, double*, double*, int*) [27]
+                0.00    0.00  722400/722400      qt(double, double) [24]
+                0.00    0.00  722400/722400      qx(double, double) [25]
+-----------------------------------------------
+                0.00    0.00   60200/60200       write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[28]     0.0    0.00    0.00   60200         std::fixed(std::ios_base&) [28]
+-----------------------------------------------
+                0.00    0.00     201/201         write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[29]     0.0    0.00    0.00     201         std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&) [29]
+-----------------------------------------------
+                0.00    0.00      36/36          double* std::__uninitialized_move_if_noexcept_a<double*, double*, std::allocator<double> >(double*, double*, double*, std::allocator<double>&) [32]
+[30]     0.0    0.00    0.00      36         decltype (__miter_base(({parm#1}.base)())) std::__miter_base<double*>(std::move_iterator<double*>) [30]
+-----------------------------------------------
+                0.00    0.00      18/18          read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+[31]     0.0    0.00    0.00      18         void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&) [31]
+                0.00    0.00      18/18          double* std::__uninitialized_move_if_noexcept_a<double*, double*, std::allocator<double> >(double*, double*, double*, std::allocator<double>&) [32]
+-----------------------------------------------
+                0.00    0.00      18/18          void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&) [31]
+[32]     0.0    0.00    0.00      18         double* std::__uninitialized_move_if_noexcept_a<double*, double*, std::allocator<double> >(double*, double*, double*, std::allocator<double>&) [32]
+                0.00    0.00      36/36          decltype (__miter_base(({parm#1}.base)())) std::__miter_base<double*>(std::move_iterator<double*>) [30]
+-----------------------------------------------
+                0.00    0.00       1/5           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+                0.00    0.00       1/5           read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+                0.00    0.00       1/5           main [1]
+                0.00    0.00       2/5           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[33]     0.0    0.00    0.00       5         std::basic_ios<char, std::char_traits<char> >::~basic_ios() [33]
+-----------------------------------------------
+                0.00    0.00       1/4           main [1]
+                0.00    0.00       3/4           wvenacd(double*, int, int, int, double, double, double, double) [2]
+[34]     0.0    0.00    0.00       4         free_mat_mem(double**) [34]
+-----------------------------------------------
+                0.00    0.00       4/4           wvenacd(double*, int, int, int, double, double, double, double) [2]
+[35]     0.0    0.00    0.00       4         alloc_mat(int, int) [35]
+-----------------------------------------------
+                0.00    0.00       1/4           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+                0.00    0.00       1/4           read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+                0.00    0.00       2/4           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[36]     0.0    0.00    0.00       4         std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf() [36]
+-----------------------------------------------
+                0.00    0.00       2/4           main [1]
+                0.00    0.00       2/4           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[37]     0.0    0.00    0.00       4         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [37]
+-----------------------------------------------
+                0.00    0.00       4/4           int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&) [46]
+[38]     0.0    0.00    0.00       4         decltype (__miter_base(({parm#1}.base)())) std::__miter_base<int*>(std::move_iterator<int*>) [38]
+-----------------------------------------------
+                0.00    0.00       1/3           std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const [51]
+                0.00    0.00       2/3           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [47]
+[39]     0.0    0.00    0.00       3         void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [39]
+-----------------------------------------------
+                0.00    0.00       1/2           read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+                0.00    0.00       1/2           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+[40]     0.0    0.00    0.00       2         std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [40]
+                0.00    0.00       2/2           std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [41]
+-----------------------------------------------
+                0.00    0.00       2/2           std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [40]
+[41]     0.0    0.00    0.00       2         std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [41]
+-----------------------------------------------
+                0.00    0.00       2/2           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[42]     0.0    0.00    0.00       2         std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [42]
+                0.00    0.00       2/2           std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [43]
+-----------------------------------------------
+                0.00    0.00       2/2           std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [42]
+[43]     0.0    0.00    0.00       2         std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [43]
+-----------------------------------------------
+                0.00    0.00       1/2           main [1]
+                0.00    0.00       1/2           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+[44]     0.0    0.00    0.00       2         std::vector<double, std::allocator<double> >::vector() [44]
+-----------------------------------------------
+                0.00    0.00       2/2           read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+[45]     0.0    0.00    0.00       2         void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [45]
+                0.00    0.00       2/2           int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&) [46]
+-----------------------------------------------
+                0.00    0.00       2/2           void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [45]
+[46]     0.0    0.00    0.00       2         int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&) [46]
+                0.00    0.00       4/4           decltype (__miter_base(({parm#1}.base)())) std::__miter_base<int*>(std::move_iterator<int*>) [38]
+-----------------------------------------------
+                0.00    0.00       2/2           write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+[47]     0.0    0.00    0.00       2         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [47]
+                0.00    0.00       2/3           void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [39]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[48]     0.0    0.00    0.00       1         read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [48]
+                0.00    0.00       2/2           void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [45]
+                0.00    0.00       1/5           std::basic_ios<char, std::char_traits<char> >::~basic_ios() [33]
+                0.00    0.00       1/2           std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [40]
+                0.00    0.00       1/4           std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf() [36]
+                0.00    0.00       1/2           std::vector<double, std::allocator<double> >::vector() [44]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[49]     0.0    0.00    0.00       1         write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [49]
+                0.00    0.00   60200/60200       std::fixed(std::ios_base&) [28]
+                0.00    0.00     201/201         std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&) [29]
+                0.00    0.00       2/5           std::basic_ios<char, std::char_traits<char> >::~basic_ios() [33]
+                0.00    0.00       2/2           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [47]
+                0.00    0.00       2/2           std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [42]
+                0.00    0.00       2/4           std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf() [36]
+                0.00    0.00       2/4           void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [37]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[50]     0.0    0.00    0.00       1         read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [50]
+                0.00    0.00      18/18          void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&) [31]
+                0.00    0.00       1/5           std::basic_ios<char, std::char_traits<char> >::~basic_ios() [33]
+                0.00    0.00       1/2           std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [40]
+                0.00    0.00       1/4           std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf() [36]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[51]     0.0    0.00    0.00       1         std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const [51]
+                0.00    0.00       1/1           std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [54]
+                0.00    0.00       1/3           void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [39]
+-----------------------------------------------
+                0.00    0.00       1/1           std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [56]
+[52]     0.0    0.00    0.00       1         std::basic_iostream<char, std::char_traits<char> >::basic_iostream() [52]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[53]     0.0    0.00    0.00       1         std::vector<int, std::allocator<int> >::vector() [53]
+-----------------------------------------------
+                0.00    0.00       1/1           std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const [51]
+[54]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [54]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[55]     0.0    0.00    0.00       1         std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [55]
+                0.00    0.00       1/1           std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [56]
+-----------------------------------------------
+                0.00    0.00       1/1           std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [55]
+[56]     0.0    0.00    0.00       1         std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [56]
+                0.00    0.00       1/1           std::basic_iostream<char, std::char_traits<char> >::basic_iostream() [52]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[57]     0.0    0.00    0.00       1         std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_stringstream() [57]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[58]     0.0    0.00    0.00       1         std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [58]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [672]
+[59]     0.0    0.00    0.00       1         __sti___10_wavesim_cc_33591591 [59]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [672]
+[60]     0.0    0.00    0.00       1         __sti___11_arrayman_cc_8626151e [60]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [672]
+[61]     0.0    0.00    0.00       1         __sti___6_rnw_cc_5ebbe28c [61]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [672]
+[62]     0.0    0.00    0.00       1         __sti___7_main_cc_main [62]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [672]
+[63]     0.0    0.00    0.00       1         __sti___8_abcon_cc__Z2qxdd [63]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [48] read_fwdset(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<int, std::allocator<int> >&, int&, double&, double&, double&) [27] gen_cfabc(double, double*, double*, int*) [38] decltype (__miter_base(({parm#1}.base)())) std::__miter_base<int*>(std::move_iterator<int*>)
+  [34] free_mat_mem(double**) [51] std::__cxx11::basic_stringbuf<char, std::char_traits<char>, std::allocator<char> >::str() const [32] double* std::__uninitialized_move_if_noexcept_a<double*, double*, std::allocator<double> >(double*, double*, double*, std::allocator<double>&)
+  [49] write_rec_txt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, double**, double, double, int, int, int) [52] std::basic_iostream<char, std::char_traits<char> >::basic_iostream() [46] int* std::__uninitialized_move_if_noexcept_a<int*, int*, std::allocator<int> >(int*, int*, int*, std::allocator<int>&)
+  [24] qt(double, double)     [36] std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf() [29] std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)
+  [25] qx(double, double)     [40] std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [28] std::fixed(std::ios_base&)
+  [26] cfl(double, double, double) [41] std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode) [58] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(char const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&)
+  [14] d4x(double*, double*, int, int, double) [42] std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [47] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  [13] d4y(double*, double*, int, int, double) [43] std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream() [17] ___Z3d4xPdS_iidEND (hider.cc)
+   [5] d5x(double*, double*, int, int, double) [31] void std::vector<double, std::allocator<double> >::_M_emplace_back_aux<double const&>(double const&) [16] ___Z3d4yPdS_iidEND (hider.cc)
+   [3] d5y(double*, double*, int, int, double) [44] std::vector<double, std::allocator<double> >::vector() [19] ___Z3d5yPdS_iidEND (hider.cc)
+   [6] d4xy(double*, double*, int, int, double) [45] void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [18] ___Z5d2x2yPdS_S_iidEND (hider.cc)
+   [9] dx4y(double*, double*, int, int, double) [53] std::vector<int, std::allocator<int> >::vector() [8] ___Z6d2xd2yPdiidEND (hider.cc)
+   [7] habc(double**, int, int, double*, int*, int*, int) [37] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [59] __sti___10_wavesim_cc_33591591
+   [4] d2x2y(double*, double*, double*, int, int, double) [39] void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char*>(char*, char*, std::forward_iterator_tag) [60] __sti___11_arrayman_cc_8626151e
+  [11] d2x3y(double*, double*, int, int, double) [54] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [61] __sti___6_rnw_cc_5ebbe28c
+  [12] d3x2y(double*, double*, int, int, double) [55] std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [62] __sti___7_main_cc_main
+  [10] d2xd2y(double*, int, int, double) [56] std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::basic_stringstream(std::_Ios_Openmode) [63] __sti___8_abcon_cc__Z2qxdd
+   [2] wvenacd(double*, int, int, int, double, double, double, double) [57] std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_stringstream() [15] _init
+  [50] read_vel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<double, std::allocator<double> >&, int&, int&, int&, double&) [33] std::basic_ios<char, std::char_traits<char> >::~basic_ios()
+  [35] alloc_mat(int, int)    [30] decltype (__miter_base(({parm#1}.base)())) std::__miter_base<double*>(std::move_iterator<double*>)
