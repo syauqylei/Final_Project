@@ -1,9 +1,9 @@
 #!/bin/bash
-for number in {10..1110..50}
+
+for i in {1..5}
 do
-echo "$number" >> fwdset.txt
-done
-for num in {10..1110..50}
-do
-echo '0' >> fwdset.txt
+	par1="./rec$i"
+	par2="./vel$i.txt"
+	par3="./fwdset.txt"
+	./wve_nacdgpu $par1 $par2 $par3
 done

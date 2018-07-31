@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <sstream>
-#include <sys/sysinfo.h>
+#include <ctime>
 #include "rnw.h"
 #include "arrayman.h"
 #include "wavesim.h"
@@ -23,7 +23,10 @@ int main(int argc, char *argv[]){
 		std::cout<<"Create Record with Source Location ("<<srcloc[ns+i]<<","<<srcloc[i]<<")\n";
 		int src_loc=srcloc[ns+i]*(nx)+srcloc[i];
 		std::cout<<"Calculating Wave solution with FD2 .... \n";
+		int start=std::clock();
 		u=wvenacd(Velocity,nx,ny,src_loc,freq,h,dt,T);
+		int end=std::clock();
+		std::cout << "time: " << (end-start)/double(CLOCKS_PER_SEC)*1000 << std::endl;
 		write_rec_txt(argv[1], u,srcloc[i],srcloc[ns+i],h,dt, nx,ny,nt);
 		}
 	free_mat_mem(u);
