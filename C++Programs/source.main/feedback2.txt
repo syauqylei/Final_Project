@@ -1,0 +1,90 @@
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel main.cc
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel  wavesim.cc
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 111)
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 130)
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 147)
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 190)
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 257)
+PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 292)
+wvenacd(double *, int, int, int, double, double, double, double):
+     58, Unrolled inner loop 4 times
+    100, Accelerator kernel generated
+         Generating Tesla code
+        103, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    100, Generating implicit copyin(Uxo[Nx*2:nx+2],Uyo[Nx*2:nx+2])
+         Generating implicit copyout(Uyo[:nx+2],Uxo[:nx+2])
+         Generating implicit copyin(Uo[Nx*2:nx+2])
+         Generating implicit copyout(Uo[:nx+2])
+    107, FMA (fused multiply-add) instruction(s) generated
+    111, Accelerator kernel generated
+         Generating Tesla code
+        115, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    115, Accelerator restriction: size of the GPU copy of Uo,Uxo,Uyo,Up,Um is unknown
+    130, Accelerator kernel generated
+         Generating Tesla code
+        133, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    133, Accelerator restriction: size of the GPU copy of Uxo,Uo,Uyo,Uxp,Uxm is unknown
+    147, Accelerator kernel generated
+         Generating Tesla code
+        150, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    150, Accelerator restriction: size of the GPU copy of Uyp,Uyo,Uxo,Uo,Uym is unknown
+    167, Accelerator kernel generated
+         Generating Tesla code
+        171, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    167, Generating implicit copyin(Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx],Uxp[:Ny*Nx])
+         Generating implicit copyin(Uy[1:2][:Ny*Nx],Ux[1:2][:Ny*Nx])
+         Generating implicit copyout(Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
+         Generating implicit copyin(Uxo[:Ny*Nx],Uxm[:Ny*Nx],Up[:Ny*Nx])
+         Generating implicit copyin(U[1:2][:Ny*Nx])
+         Generating implicit copyout(U[:5][:Ny*Nx])
+         Generating implicit copyin(Uo[:Ny*Nx],Um[:Ny*Nx])
+    190, Accelerator kernel generated
+         Generating Tesla code
+        195, #pragma acc loop gang /* blockIdx.x */
+        199, #pragma acc loop vector(128) /* threadIdx.x */
+        209, #pragma acc loop vector(128) /* threadIdx.x */
+        219, #pragma acc loop vector(128) /* threadIdx.x */
+        229, #pragma acc loop vector(128) /* threadIdx.x */
+        239, #pragma acc loop vector(128) /* threadIdx.x */
+        249, #pragma acc loop vector(128) /* threadIdx.x */
+    195, Accelerator restriction: size of the GPU copy of Up,Uxp,Uyp is unknown
+    199, Accelerator restriction: size of the GPU copy of U is unknown
+         Loop is parallelizable
+    209, Accelerator restriction: size of the GPU copy of Ux is unknown
+         Loop is parallelizable
+    219, Accelerator restriction: size of the GPU copy of Uy is unknown
+         Loop is parallelizable
+    229, Accelerator restriction: size of the GPU copy of U is unknown
+         Loop is parallelizable
+    239, Accelerator restriction: size of the GPU copy of Ux is unknown
+         Loop is parallelizable
+    249, Accelerator restriction: size of the GPU copy of Uy is unknown
+         Loop is parallelizable
+    257, Accelerator kernel generated
+         Generating Tesla code
+        260, #pragma acc loop gang /* blockIdx.x */
+        264, #pragma acc loop vector(128) /* threadIdx.x */
+        274, #pragma acc loop vector(128) /* threadIdx.x */
+        284, #pragma acc loop vector(128) /* threadIdx.x */
+    264, Accelerator restriction: size of the GPU copy of U is unknown
+         Loop is parallelizable
+    274, Accelerator restriction: size of the GPU copy of Ux is unknown
+         Loop is parallelizable
+    284, Accelerator restriction: size of the GPU copy of Uy is unknown
+         Loop is parallelizable
+    292, Accelerator kernel generated
+         Generating Tesla code
+        295, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    295, Accelerator restriction: size of the GPU copy of Uo,Um,Up,Uxo,Uxm,Uxp,Uyo,Uym,Uyp is unknown
+    304, Generating implicit copyout(u[i+1][:nx])
+         Generating implicit copyin(stencil[:nx])
+    306, Accelerator restriction: size of the GPU copy of Up is unknown
+         Loop is parallelizable
+         Accelerator kernel generated
+         Generating Tesla code
+        306, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    306, Generating implicit copyin(Up[:])
+    313, Generating exit data delete(Uy[:1][:1],Uyo[:1],Uym[:1],Uxo[:1],Ux[:1][:1],Uxm[:1],U[:1][:1],Um[:1],Uo[:1],Uyp[:1],left_sstep[:1],bottom_sstep[:1],tstep[:1],right_sstep[:1],bottom_cfabc[:1][:1],right_cfabc[:1][:1],left_cfabc[:1][:1],Uxp[:1],Up[:1])
+PGCC/x86 Linux 17.10-0: compilation completed with severe errors
+Makefile:19: recipe for target 'wavesim.o' failed
+make: *** [wavesim.o] Error 2
