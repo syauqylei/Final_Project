@@ -33,7 +33,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double *__restrict__ Uym= new double[Nx*Ny];
 	//initial condition
 	
-	#pragma acc kernels
+	#pragma acc kernels copyin(Uxp[:Ny*Nx],Uym[:Ny*Nx],Uyo[:Ny*Nx],Uyp[:Ny*Nx],Up[:Ny*Nx],Uxm[:Ny*Nx],Uxo[:Ny*Nx],Um[:Ny*Nx],Uo[:Ny*Nx])
 	for(int j=0;j<Nx*Ny;j++)
 	{
 		Up[j]=0.0;
