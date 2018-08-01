@@ -56,7 +56,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
-	#pragma kernels
+	#pragma acc kernels copyin(stencil[:nx*ny])
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
@@ -81,17 +81,21 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ bottom_cfabc=alloc_mat(nx,81);
 
 	//fill coefficient to array
+	#pragma acc kernels
 	for (int i=0;i<ny;i++)
 		{	
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
 		gen_cfabc(right_cfabc[i],vel[(i+1)*nx-1],dt,h,beta);
 		}
+	#pragma acc kernels
 	for (int i=0;i<nx;i++)
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
 	
 	double t;
+	
+	#pragma acc data copyin(left_sstep[:81],right_sstep[:81],bottom_sstep[:81],tstep[:81],left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81])		
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -99,7 +103,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		if((i)%(nt/10)==0){
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
-		{
+		
 		//Top neuman boundary
 		#pragma acc parallel loop
 		for (int j=0;j<Nx;j++){
@@ -169,7 +173,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//store wavefield for ABC calculation
-		#pragma acc parallel loop
+		#pragma acc data copyin(U[:5][:Nx*ny],Ux[:5][:Nx*ny],Uy[:5][:Nx*ny])
+		{
+		#pragma acc parallel loop present(U[:5][:Nx*ny],Ux[:5][:Nx*ny],Uy[:5][:Nx*ny])
 		for(int j=0; j<Nx*Ny;j++)
 		{
 			U[0][j]=U[1][j];
@@ -193,7 +199,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		//calculate ABC higdon boundary
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop present(left_sstep[:81],right_sstep[:81],tstep[:81],left_cfabc[:ny][:81],right_cfabc[:ny][:81])
 		for (int j=1;j<Ny-1;j++)
 		{	
 			double Ubdrleft=0;
@@ -258,7 +264,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		}
 		
-		#pragma acc parallel loop 
+		#pragma acc parallel loop present(bottom_sstep[:81],tstep[:81],bottom_cfabc[:nx][:81]) 
 		for (int j=1;j<Nx-1;j++)
 		{
 			double Ubdrbottom=0;
