@@ -56,7 +56,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
-	#pragma acc kernels copyin(stencil[:nx*ny])
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
@@ -103,7 +102,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		
 		
 		//Top neuman boundary
-		#pragma acc parallel loop
+		#pragma acc parallel loop present(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny])
 		for (int j=0;j<Nx;j++){
 			Uo[j]=Uo[j+2*Nx];
 			Uxo[j]=Uxo[j+2*Nx];
@@ -308,6 +307,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uym[pos]=Uyo[pos];
 			Uyo[pos]=Uyp[pos];
 		}
+		
 		#pragma acc kernels
 		for (int j=0;j<nx;j++)
 		{
