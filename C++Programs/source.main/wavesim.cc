@@ -168,9 +168,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//store wavefield for ABC calculation
-		#pragma acc data copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
+		#pragma acc data copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny],Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Um[:Nx*Ny],Uxm[:Nx*Ny],Uym[:Nx*Ny])
 		{
-		#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
+		#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny],Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Um[:Nx*Ny],Uxm[:Nx*Ny],Uym[:Nx*Ny])
 		for(int j=0; j<Nx*Ny;j++)
 		{
 			U[0][j]=U[1][j];
