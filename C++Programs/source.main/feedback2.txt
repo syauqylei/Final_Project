@@ -1,90 +1,351 @@
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel main.cc
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel  wavesim.cc
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 111)
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 130)
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 147)
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 190)
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 257)
-PGCC-S-0155-Compiler failed to translate accelerator region (see -Minfo messages): Could not find allocated-variable index for symbol (wavesim.cc: 292)
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel main.cc
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel  wavesim.cc
 wvenacd(double *, int, int, int, double, double, double, double):
-     58, Unrolled inner loop 4 times
-    100, Accelerator kernel generated
+     33, Generating copyin(Uxo[:Ny*Nx],Uxp[:Ny*Nx],Uym[:Ny*Nx],Uyo[:Ny*Nx],Uyp[:Ny*Nx],Uo[:Ny*Nx],Up[:Ny*Nx],Uxm[:Ny*Nx],Um[:Ny*Nx])
+     37, Loop is parallelizable
+         Accelerator kernel generated
          Generating Tesla code
-        103, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    100, Generating implicit copyin(Uxo[Nx*2:nx+2],Uyo[Nx*2:nx+2])
+         37, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+     58, Generating copyin(stencil[:nx*ny])
+     60, Loop carried dependence of stencil-> prevents parallelization
+         Loop carried backward dependence of stencil-> prevents vectorization
+     61, Loop is parallelizable
+         Accelerator kernel generated
+         Generating Tesla code
+         60, #pragma acc loop seq
+         61, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+     94, Generating copyin(left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81],tstep[:81],right_sstep[:81],bottom_sstep[:81],left_sstep[:81])
+    102, Accelerator kernel generated
+         Generating Tesla code
+        107, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    102, Generating implicit copyin(Uyo[Nx*2:nx+2],Uxo[Nx*2:nx+2])
          Generating implicit copyout(Uyo[:nx+2],Uxo[:nx+2])
          Generating implicit copyin(Uo[Nx*2:nx+2])
          Generating implicit copyout(Uo[:nx+2])
-    107, FMA (fused multiply-add) instruction(s) generated
-    111, Accelerator kernel generated
+    111, FMA (fused multiply-add) instruction(s) generated
+    115, Accelerator kernel generated
          Generating Tesla code
-        115, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    115, Accelerator restriction: size of the GPU copy of Uo,Uxo,Uyo,Up,Um is unknown
-    130, Accelerator kernel generated
+        119, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    115, Generating implicit copyin(Uo[:],Uxo[:])
+         Generating implicit copyout(Up[:])
+         Generating implicit copyin(Um[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:])
+    134, Accelerator kernel generated
          Generating Tesla code
-        133, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    133, Accelerator restriction: size of the GPU copy of Uxo,Uo,Uyo,Uxp,Uxm is unknown
-    147, Accelerator kernel generated
+        137, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    134, Generating implicit copyin(Uxo[:],Uo[:])
+         Generating implicit copyout(Uxp[:])
+         Generating implicit copyin(Uxm[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:])
+    151, Accelerator kernel generated
          Generating Tesla code
-        150, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    150, Accelerator restriction: size of the GPU copy of Uyp,Uyo,Uxo,Uo,Uym is unknown
-    167, Accelerator kernel generated
-         Generating Tesla code
-        171, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    167, Generating implicit copyin(Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx],Uxp[:Ny*Nx])
-         Generating implicit copyin(Uy[1:2][:Ny*Nx],Ux[1:2][:Ny*Nx])
-         Generating implicit copyout(Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
-         Generating implicit copyin(Uxo[:Ny*Nx],Uxm[:Ny*Nx],Up[:Ny*Nx])
-         Generating implicit copyin(U[1:2][:Ny*Nx])
-         Generating implicit copyout(U[:5][:Ny*Nx])
-         Generating implicit copyin(Uo[:Ny*Nx],Um[:Ny*Nx])
-    190, Accelerator kernel generated
-         Generating Tesla code
-        195, #pragma acc loop gang /* blockIdx.x */
-        199, #pragma acc loop vector(128) /* threadIdx.x */
-        209, #pragma acc loop vector(128) /* threadIdx.x */
-        219, #pragma acc loop vector(128) /* threadIdx.x */
-        229, #pragma acc loop vector(128) /* threadIdx.x */
-        239, #pragma acc loop vector(128) /* threadIdx.x */
-        249, #pragma acc loop vector(128) /* threadIdx.x */
-    195, Accelerator restriction: size of the GPU copy of Up,Uxp,Uyp is unknown
-    199, Accelerator restriction: size of the GPU copy of U is unknown
-         Loop is parallelizable
-    209, Accelerator restriction: size of the GPU copy of Ux is unknown
-         Loop is parallelizable
-    219, Accelerator restriction: size of the GPU copy of Uy is unknown
-         Loop is parallelizable
-    229, Accelerator restriction: size of the GPU copy of U is unknown
-         Loop is parallelizable
-    239, Accelerator restriction: size of the GPU copy of Ux is unknown
-         Loop is parallelizable
-    249, Accelerator restriction: size of the GPU copy of Uy is unknown
-         Loop is parallelizable
-    257, Accelerator kernel generated
-         Generating Tesla code
-        260, #pragma acc loop gang /* blockIdx.x */
-        264, #pragma acc loop vector(128) /* threadIdx.x */
-        274, #pragma acc loop vector(128) /* threadIdx.x */
-        284, #pragma acc loop vector(128) /* threadIdx.x */
-    264, Accelerator restriction: size of the GPU copy of U is unknown
-         Loop is parallelizable
-    274, Accelerator restriction: size of the GPU copy of Ux is unknown
-         Loop is parallelizable
-    284, Accelerator restriction: size of the GPU copy of Uy is unknown
-         Loop is parallelizable
-    292, Accelerator kernel generated
-         Generating Tesla code
-        295, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    295, Accelerator restriction: size of the GPU copy of Uo,Um,Up,Uxo,Uxm,Uxp,Uyo,Uym,Uyp is unknown
-    304, Generating implicit copyout(u[i+1][:nx])
-         Generating implicit copyin(stencil[:nx])
-    306, Accelerator restriction: size of the GPU copy of Up is unknown
-         Loop is parallelizable
+        154, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    151, Generating implicit copyin(Uyo[:],Uxo[:],Uo[:],Uym[:],vel[:nx*ny],stencil[:nx*ny])
+         Generating implicit copyout(Uyp[:])
+    175, Generating implicit copyin(Up[:Ny*Nx],Uxp[:Ny*Nx])
+         Generating copyin(U[:5][:ny*Nx],Ux[:5][:ny*Nx],Uy[:5][:ny*Nx])
          Accelerator kernel generated
          Generating Tesla code
-        306, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    306, Generating implicit copyin(Up[:])
-    313, Generating exit data delete(Uy[:1][:1],Uyo[:1],Uym[:1],Uxo[:1],Ux[:1][:1],Uxm[:1],U[:1][:1],Um[:1],Uo[:1],Uyp[:1],left_sstep[:1],bottom_sstep[:1],tstep[:1],right_sstep[:1],bottom_cfabc[:1][:1],right_cfabc[:1][:1],left_cfabc[:1][:1],Uxp[:1],Up[:1])
-PGCC/x86 Linux 17.10-0: compilation completed with severe errors
-Makefile:19: recipe for target 'wavesim.o' failed
-make: *** [wavesim.o] Error 2
+        177, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    175, Generating implicit copyin(Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx])
+         Generating present(Uy[:5][:ny*Nx])
+         Generating implicit copyin(Uxo[:Ny*Nx],Uxm[:Ny*Nx])
+         Generating present(Ux[:5][:ny*Nx])
+         Generating implicit copyin(Uo[:Ny*Nx],Um[:Ny*Nx])
+         Generating present(U[:5][:ny*Nx])
+    196, Generating present(left_cfabc[:ny][:81],right_cfabc[:ny][:81],tstep[:81],right_sstep[:81])
+         Generating implicit copyout(Uyp[:])
+         Generating present(left_sstep[:81])
+         Accelerator kernel generated
+         Generating Tesla code
+        201, #pragma acc loop gang /* blockIdx.x */
+        205, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Ubdrleft)
+        215, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uxbdrleft)
+        225, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uybdrleft)
+        235, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Ubdrright)
+        245, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uxbdrright)
+        255, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uybdrright)
+    196, Generating implicit copyout(Up[:],Uxp[:])
+    205, Loop is parallelizable
+    215, Loop is parallelizable
+    225, Loop is parallelizable
+    235, Loop is parallelizable
+    245, Loop is parallelizable
+    255, Loop is parallelizable
+    263, Generating present(bottom_cfabc[:nx][:81],tstep[:81],bottom_sstep[:81])
+         Generating implicit copyout(Uyp[(Ny*Nx)-nx-1:nx])
+         Accelerator kernel generated
+         Generating Tesla code
+        266, #pragma acc loop gang /* blockIdx.x */
+        270, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Ubdrbottom)
+        280, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uxbdrbottom)
+        290, #pragma acc loop vector(128) /* threadIdx.x */
+             Generating reduction(+:Uybdrbottom)
+    263, Generating implicit copyout(Uxp[(Ny*Nx)-nx-1:nx],Up[(Ny*Nx)-nx-1:nx])
+    270, Loop is parallelizable
+    280, Loop is parallelizable
+    290, Loop is parallelizable
+    298, Accelerator kernel generated
+         Generating Tesla code
+        301, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    298, Generating implicit copy(Uyo[:])
+         Generating implicit copyin(Uxp[:])
+         Generating implicit copyout(Uym[:])
+         Generating implicit copy(Uxo[:])
+         Generating implicit copyin(Up[:])
+         Generating implicit copyout(Uxm[:])
+         Generating implicit copy(Uo[:])
+         Generating implicit copyout(Um[:])
+         Generating implicit copyin(stencil[:nx*ny],Uyp[:])
+    310, Generating implicit copyout(u[i+1][:nx])
+         Generating implicit copyin(stencil[:nx],Up[:])
+    312, Loop is parallelizable
+         Accelerator kernel generated
+         Generating Tesla code
+        312, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    319, Generating exit data delete(Uy[:1][:1],Uyo[:1],Uym[:1],Uxo[:1],Ux[:1][:1],Uxm[:1],U[:1][:1],Um[:1],Uo[:1],Uyp[:1],left_sstep[:1],bottom_sstep[:1],tstep[:1],right_sstep[:1],bottom_cfabc[:1][:1],right_cfabc[:1][:1],left_cfabc[:1][:1],Uxp[:1],Up[:1])
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel arrayman.cc
+pairsortd(int *, double *, int):
+      8, Loop unrolled 8 times
+     18, Loop unrolled 16 times
+pairsorta(int *, int *, int):
+     30, Loop unrolled 8 times
+     40, Loop unrolled 8 times
+pairsort(int *, int *, int):
+     53, Loop unrolled 8 times
+     63, Loop unrolled 8 times
+alloc_mat(int, int):
+     74, Loop unrolled 8 times
+T2 std::__copy_move_backward<(bool)1, (bool)0, std::random_access_iterator_tag>::__copy_move_b<std::pair<int, double> *, std::pair<int, double> *>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+                                                                 52, include "ccomplex"
+                                                                      39, include "complex"
+                                                                           45, include "sstream"
+                                                                                38, include "istream"
+                                                                                     38, include "ios"
+                                                                                          40, include "char_traits.h"
+                                                                                               39, include "stl_algobase.h"
+                                                                                                   547, Loop unrolled 8 times
+T2 std::__copy_move_backward<(bool)1, (bool)0, std::random_access_iterator_tag>::__copy_move_b<std::pair<int, int> *, std::pair<int, int> *>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+                                                                 52, include "ccomplex"
+                                                                      39, include "complex"
+                                                                           45, include "sstream"
+                                                                                38, include "istream"
+                                                                                     38, include "ios"
+                                                                                          40, include "char_traits.h"
+                                                                                               39, include "stl_algobase.h"
+                                                                                                   547, Loop unrolled 8 times
+void std::__introsort_loop<std::pair<int, double> *, long, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2, T3):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__make_heap<std::pair<int, double> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__adjust_heap<std::pair<int, double> *, long, std::pair<int, double>, __gnu_cxx::__ops::_Iter_less_iter>(T1, T2, T2, T3, T4):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__sort_heap<std::pair<int, double> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+T1 std::__unguarded_partition<std::pair<int, double> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__insertion_sort<std::pair<int, double> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+         668, Loop unrolled 8 times
+T2 std::move_backward<std::pair<int, double> *, std::pair<int, double> *>(T1, T1, T2):
+         597, Loop unrolled 8 times
+T3 std::__copy_move_backward_a2<(bool)1, std::pair<int, double> *, std::pair<int, double> *>(T2, T2, T3):
+         587, Loop unrolled 8 times
+T3 std::__copy_move_backward_a<(bool)1, std::pair<int, double> *, std::pair<int, double> *>(T2, T2, T3):
+         547, Loop unrolled 8 times
+void std::__unguarded_linear_insert<std::pair<int, double> *, __gnu_cxx::__ops::_Val_less_iter>(T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__introsort_loop<std::pair<int, int> *, long, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2, T3):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__make_heap<std::pair<int, int> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__adjust_heap<std::pair<int, int> *, long, std::pair<int, int>, __gnu_cxx::__ops::_Iter_less_iter>(T1, T2, T2, T3, T4):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__sort_heap<std::pair<int, int> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+T1 std::__unguarded_partition<std::pair<int, int> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+void std::__insertion_sort<std::pair<int, int> *, __gnu_cxx::__ops::_Iter_less_iter>(T1, T1, T2):
+         668, Loop unrolled 8 times
+T2 std::move_backward<std::pair<int, int> *, std::pair<int, int> *>(T1, T1, T2):
+         597, Loop unrolled 8 times
+T3 std::__copy_move_backward_a2<(bool)1, std::pair<int, int> *, std::pair<int, int> *>(T2, T2, T3):
+         587, Loop unrolled 8 times
+T3 std::__copy_move_backward_a<(bool)1, std::pair<int, int> *, std::pair<int, int> *>(T2, T2, T3):
+         547, Loop unrolled 8 times
+void std::__unguarded_linear_insert<std::pair<int, int> *, __gnu_cxx::__ops::_Val_less_iter>(T1, T2):
+      1, include "stdc++.h"
+          33, include "cassert"
+              121, include "stdc++.h"
+                    36, include "cerrno"
+                         42, include "errno.h"
+                              35, include "errno.h"
+                                   24, include "errno.h"
+                                         1, include "errno.h"
+                                             52, include "stdc++.h"
+                                                  37, include "cfloat"
+                                                       42, include "float.h"
+                                                            56, include "stdc++.h"
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel abcon.cc
+gen_sstep(int *, int):
+     23, Outer loop unrolled 2 times (completely unrolled)
+gen_tstep(int *):
+     38, Outer loop unrolled 2 times (completely unrolled)
+gen_cfabc(double *, double, double, double, double *):
+     60, Outer loop unrolled 2 times (completely unrolled)
+     63, Loop unrolled 8 times
+pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel rnw.cc
+w_dat(const std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> &, double *, double **, double, double, int, int, int, int, double, double, double):
+          48, FMA (fused multiply-add) instruction(s) generated
+         133, FMA (fused multiply-add) instruction(s) generated
+pgc++ -std=c++11 -pg *.o -o ./wve_nacdgpu -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel
