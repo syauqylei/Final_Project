@@ -32,6 +32,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double *__restrict__ Uyp= new double[Nx*Ny];
 	double *__restrict__ Uym= new double[Nx*Ny];
 	//initial condition
+	
+	#pragma acc kernels
 	for(int j=0;j<Nx*Ny;j++)
 	{
 		Up[j]=0.0;
@@ -54,6 +56,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
+	#pragma kernels
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
@@ -78,12 +81,14 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ bottom_cfabc=alloc_mat(nx,81);
 	
 	//fill coefficient to array
+	#pragma acc kernels
 	for (int i=0;i<ny;i++)
 		{	
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
 		gen_cfabc(right_cfabc[i],vel[(i+1)*nx-1],dt,h,beta);
 		}
- 
+
+	#pragma acc kernels
 	for (int i=0;i<nx;i++)
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
