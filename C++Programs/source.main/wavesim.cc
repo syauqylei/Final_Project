@@ -12,7 +12,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int Ny=ny+2;
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
-	#pragma acc enter data create(u[:nt,:nx])
+	#pragma acc enter data create(u[:nt][:nx])
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
