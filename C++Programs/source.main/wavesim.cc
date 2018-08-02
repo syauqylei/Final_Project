@@ -305,7 +305,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uyo[pos]=Uyp[pos];
 		}
 		
-		#pragma acc kernels present(u[:nt][:nx*ny]) copyin(Up[:Nx*Ny]) present(stencil[:nx*ny])
+		#pragma acc kernels copyout(u[:nt][:nx*ny]) copyin(Up[:Nx*Ny]) present(stencil[:nx*ny])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
