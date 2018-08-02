@@ -12,7 +12,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int Ny=ny+2;
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
-	#pragma acc enter data create(u[:nt][:nx])
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
@@ -109,8 +108,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		//Source
 		int source_loc=stencil[srcloc];
 		Uo[source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-        
-        //Calculate Wavefield
+
+	        //Calculate Wavefield
 		#pragma acc parallel loop copyin(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Up[:Nx*Ny],Um[:Nx*Ny]) present(stencil[:nx*ny],vel[:nx*ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
@@ -312,7 +311,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			u[i+1][j]=Up[pos];
 		}
 	}
-	#pragma acc exit data delete(U,Ux,Uy,left_sstep,right_sstep,bottom_sstep,tstep,left_cfabc,right_cfabc,bottom_cfabc,Up,Uo,Um,Uxo,Uxm,Uxp,Uyo,Uyp,Uym)
+	#pragma acc exit data delete(U[:5][:Nx*Ny],Ux,Uy,left_sstep,right_sstep,bottom_sstep,tstep,left_cfabc,right_cfabc,bottom_cfabc,Up,Uo,Um,Uxo,Uxm,Uxp,Uyo,Uyp,Uym,u)
 	free_mat_mem(U); free_mat_mem(Ux); free_mat_mem(Uy);
 	free_mat_mem(left_cfabc); free_mat_mem(right_cfabc); free_mat_mem(bottom_cfabc);
 	delete [] left_sstep; delete [] right_sstep; delete [] bottom_sstep; delete [] tstep;
