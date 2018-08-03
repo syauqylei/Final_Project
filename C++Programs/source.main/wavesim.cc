@@ -166,7 +166,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//store wavefield for ABC calculation
-		#pragma acc parallel loop copyin(U[1:2][:Ny*Nx],Uy[1:2][:Ny*Nx],Ux[1:2][:Ny*Nx],Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx],Uxp[:Ny*Nx],Uxo[:Ny*Nx],Uxm[:Ny*Nx],Up[:Ny*Nx],Uo[:Ny*Nx],Um[:Ny*Nx]) copyout(Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx],U[:5][:Ny*Nx])
+		#pragma acc parallel loop  copy(Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx],U[:5][:Ny*Nx]) copyin(Ux[1:2][:Ny*Nx],Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx],Uxp[:Ny*Nx],Uxo[:Ny*Nx],Uxm[:Ny*Nx],Up[:Ny*Nx],Uo[:Ny*Nx],Um[:Ny*Nx])
 		for(int j=0; j<Nx*Ny;j++)
 		{
 			U[0][j]=U[1][j];
@@ -301,7 +301,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uyo[pos]=Uyp[pos];
 		}
 		
-		#pragma acc kernels copyin(stencil[:nx],Up[:Nx*Ny]) copyout(u[i:i+1][:nx])
+		#pragma acc kernels copyin(stencil[:nx],Up[:Nx*Ny]) copyout(u[:][:nx])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
