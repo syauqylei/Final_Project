@@ -94,7 +94,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		
 		
 		//Top neumann boundary
-		#pragma acc kernels present(U[3][0:Nx],Ux[3][0:Nx],Uy[3][:Nx],U[3][Nx*2:Nx*3],Ux[3][Nx*2:Nx*3],Uy[3][Nx*2:Nx*3])
+		#pragma acc kernels present(U[3][0:Nx],Ux[3][0:Nx],Uy[3][:Nx],U[3][Nx*2:Nx],Ux[3][Nx*2:Nx],Uy[3][Nx*2:Nx])
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
