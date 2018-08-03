@@ -92,7 +92,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		if((i)%(nt/10)==0){
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		//Top neumann boundary
-		#pragma acc kernels present(U[3][0:Nx],Ux[3][0:Nx],Uy[3][0:Nx],U[3][Nx*2:Nx],Ux[3][Nx*2:Nx],Uy[3][Nx*2:Nx])
+		#pragma acc kernels copyin(U[3][0:Nx],Ux[3][0:Nx],Uy[3][0:Nx],U[3][Nx*2:Nx],Ux[3][Nx*2:Nx],Uy[3][Nx*2:Nx])
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
@@ -102,7 +102,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		//Source
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-		#pragma acc update device(U[3][source_loc])
 		
 		//Calculate Wavefield
 		#pragma acc parallel loop
