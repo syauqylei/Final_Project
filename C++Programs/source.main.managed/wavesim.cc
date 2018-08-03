@@ -179,7 +179,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=left_sstep[k];
-				Uybdrleft+=-Uy[3][4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+				Uybdrleft+=-Uy[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
 			}
 				Uy[4][j*Nx+1]=Uybdrleft;
 
@@ -209,7 +209,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=right_sstep[k];
-				Uybdrright+=-Uy[3][4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
+				Uybdrright+=-Uy[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
 				Uy[4][(j-1)*Nx-2]=Uybdrright;			
 
@@ -244,7 +244,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=bottom_sstep[k];
-				Uybdrbottom+=-Uy[3][4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
+				Uybdrbottom+=-Uy[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
 			}
 				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
 		}
