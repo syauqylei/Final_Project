@@ -15,7 +15,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ u=alloc_mat(nt,nx);
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
-	double **__restrict__ Uy[3]=alloc_mat(5,Nx*Ny);
+	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 		
 	#pragma acc kernels
 	for (int i=0;i<5;i++)
@@ -103,11 +103,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 			UD2xD2y=(U[3][pos+1]+U[3][pos-1]+U[3][pos+Nx]+U[3][pos-Nx]-4*U[3][pos])/h/h;
 			D4x=-12.0/h/h/h/h*(U[3][pos+1]-2.0*U[3][pos]+U[3][pos-1])+(Ux[3][pos+1]-Ux[3][pos-1])*6.0/h/h/h;
-			D4y=-12.0/h/h/h/h*(U[3][pos+Nx]-2.0*U[3][pos]+U[3][pos-Nx])+6.0/h/h/h*(Uy[3]o[pos+Nx]-Uy[3]o[pos-Nx]);
+			D4y=-12.0/h/h/h/h*(U[3][pos+Nx]-2.0*U[3][pos]+U[3][pos-Nx])+6.0/h/h/h*(Uy[3][pos+Nx]-Uy[3][pos-Nx]);
 			D2x2y=1.0/h/h/h/h*(2.0*(U[3][pos+Nx]+U[3][pos+1]-2.0*U[3][pos]+U[3][pos-1]+U[3][pos-Nx])
 					- U[3][pos-Nx+1]-U[3][pos-Nx-1]-U[3][pos+Nx+1]-U[3][pos+Nx-1])
 					+1.0/2.0/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx+1]-Ux[3][pos-Nx-1]-Ux[3][pos+Nx-1]-2.0*Ux[3][pos+1]+2.0*Ux[3][pos-1])
-					+1.0/2.0/h/h/h*(Uy[3]o[pos+Nx+1]+Uy[3]o[pos+Nx-1]-Uy[3]o[pos-Nx-1]-Uy[3]o[pos-Nx+1]-2.0*Uy[3]o[pos+Nx]+2.0*Uy[3]o[pos-Nx]);
+					+1.0/2.0/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos+Nx-1]-Uy[3][pos-Nx-1]-Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]+2.0*Uy[3][pos-Nx]);
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
@@ -122,7 +122,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			UxD2xD2y=(Ux[3][pos+1]+Ux[3][pos-1]+Ux[3][pos+Nx]+Ux[3][pos-Nx]-4*Ux[3][pos])/h/h;
 			D5x=-90.0/h/h/h/h/h*(U[3][pos+1]-U[3][pos-1])+30.0/h/h/h/h*(Ux[3][pos+1]+4.0*Ux[3][pos]+Ux[3][pos-1]);
 			Dx4y=-6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]-U[3][pos-1+Nx]+U[3][pos+1-Nx]+2.0*U[3][pos-1]-2.0*U[3][pos+1])
-					+3.0/h/h/h/h*(Uy[3]o[pos+Nx+1]+Uy[3]o[pos-Nx-1]-Uy[3]o[pos+Nx-1]-Uy[3]o[pos-Nx+1]);
+					+3.0/h/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos-Nx-1]-Uy[3][pos+Nx-1]-Uy[3][pos-Nx+1]);
 			D3x2y=3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos+1-Nx]-U[3][pos-1+Nx]+2.0*U[3][pos-1]-2.0*U[3][pos+1])
 					+3.0/2.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]+Ux[3][pos+Nx-1]+Ux[3][pos-Nx+1]-2.0*Ux[3][pos+1]-2.0*Ux[3][pos-1]);
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
@@ -138,12 +138,12 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
-			Uy[3]D2xD2y=(Uy[3]o[pos+1]+Uy[3]o[pos-1]+Uy[3]o[pos+Nx]+Uy[3]o[pos-Nx]-4*Uy[3]o[pos])/h/h;
+			Uy[3]D2xD2y=(Uy[3][pos+1]+Uy[3][pos-1]+Uy[3][pos+Nx]+Uy[3][pos-Nx]-4*Uy[3][pos])/h/h;
 			D4xy=6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
 					+3.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]-Ux[3][pos+Nx-1]-Ux[3][pos-Nx+1]);
-			D5y=-90.0/h/h/h/h/h*(U[3][pos+Nx]-U[3][pos-Nx])+30.0/h/h/h/h*(Uy[3]o[pos+Nx]+4.0*Uy[3]o[pos]+Uy[3]o[pos-Nx]);
+			D5y=-90.0/h/h/h/h/h*(U[3][pos+Nx]-U[3][pos-Nx])+30.0/h/h/h/h*(Uy[3][pos+Nx]+4.0*Uy[3][pos]+Uy[3][pos-Nx]);
 			D2x3y=-3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
-					+3.0/2.0/h/h/h/h*(Uy[3]o[pos+Nx+1]+Uy[3]o[pos-Nx-1]+Uy[3]o[pos+Nx-1]+Uy[3]o[pos-Nx+1]-2.0*Uy[3]o[pos+Nx]-2.0*Uy[3]o[pos-Nx]);
+					+3.0/2.0/h/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos-Nx-1]+Uy[3][pos+Nx-1]+Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]-2.0*Uy[3][pos-Nx]);
 					
 			Uy[3][4][pos]=2.0*Uy[3][3][pos]-Uy[3][2][pos]+cf1*Uy[3]D2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
