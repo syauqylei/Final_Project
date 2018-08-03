@@ -23,6 +23,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	#pragma acc kernels present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
+		#pragma acc kernels
 		for (int j=0;j<Nx*Ny;j++)
 		{
 			U[i][j]=0.0;
@@ -39,29 +40,37 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
+	#pragma acc enter data create(stencil[0:nx*ny])
+	
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
 			}
 		}
-	
+
+	#pragma acc update device(stencil[0:nx*ny])
 	//allocate array spatial operator for ABC
 	int *__restrict__ left_sstep=new int[81];
 	int *__restrict__ right_sstep=new int[81];
 	int *__restrict__ bottom_sstep=new int[81];
 	int *__restrict__ tstep=new int[81];
-	
+
+	#pragma acc enter data create(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	//fill ABC operator
 	gen_sstep(left_sstep,1);
 	gen_sstep(right_sstep,-1);
 	gen_sstep(bottom_sstep,-Nx);
 	gen_tstep(tstep);
+
+	#pragma acc update device(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	
 	//allocate array for coefficient of ABC hihgdon
 	double **__restrict__ left_cfabc=alloc_mat(ny,81);
 	double **__restrict__ right_cfabc=alloc_mat(ny,81);
 	double **__restrict__ bottom_cfabc=alloc_mat(nx,81);
-
+	
+	#pragma acc enter data create(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
+	
 	//fill coefficient to array
 	for (int i=0;i<ny;i++)
 		{	
@@ -72,8 +81,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
-	double t;
 	
+	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
+	
+	double t;
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -82,8 +93,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
 		
-		//Top neU[2]an boundary
-		#pragma acc parallel loop
+		//Top neumann boundary
+		#pragma acc kernels present(U[3][0:Nx],Ux[3][0:Nx],Uy[3][:Nx],U[3][Nx*2:Nx*3],Ux[3][Nx*2:Nx*3],Uy[3][Nx*2:Nx*3])
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
@@ -93,8 +104,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		//Source
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-
-	        //Calculate Wavefield
+		#pragma acc update device(U[3][source_loc])
+		
+		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
