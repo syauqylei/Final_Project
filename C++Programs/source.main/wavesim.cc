@@ -31,7 +31,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double *__restrict__ Uyp= new double[Nx*Ny];
 	double *__restrict__ Uym= new double[Nx*Ny];
 	
-	#pragma acc kernels copyin(Uxp[:Ny*Nx],Uym[:Ny*Nx],Uyo[:Ny*Nx],Uyp[:Ny*Nx],Up[:Ny*Nx],Uxm[:Ny*Nx],Uxo[:Ny*Nx],Um[:Ny*Nx],Uo[:Ny*Nx])
+	#pragma acc kernels copyout(Uxp[:Ny*Nx],Uym[:Ny*Nx],Uyo[:Ny*Nx],Uyp[:Ny*Nx],Up[:Ny*Nx],Uxm[:Ny*Nx],Uxo[:Ny*Nx],Um[:Ny*Nx],Uo[:Ny*Nx])
 	for(int j=0;j<Nx*Ny;j++)
 	{
 		Up[j]=0.0;
@@ -88,7 +88,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
 	double t;
-	#pragma acc data copyin(vel[:nx*ny],stencil[:nx*ny],left_sstep[:81],right_sstep[:81],bottom_sstep[:81],tstep[:81],left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81])		
+	
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -98,7 +98,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		
 		
 		//Top neuman boundary
-		#pragma acc parallel loop copyin(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny])
+		#pragma acc parallel loop copyin(Uxo[Nx*2:nx+2],Uyo[Nx*2:nx+2],Uo[Nx*2:nx+2]) copyout(Uyo[:nx+2],Uxo[:nx+2],Uo[:nx+2])
 		for (int j=0;j<Nx;j++){
 			Uo[j]=Uo[j+2*Nx];
 			Uxo[j]=Uxo[j+2*Nx];
@@ -110,7 +110,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		Uo[source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 
 	        //Calculate Wavefield
-		#pragma acc parallel loop copyin(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Up[:Nx*Ny],Um[:Nx*Ny]) present(stencil[:nx*ny],vel[:nx*ny])
+		#pragma acc parallel loop copyin(Uo[:],Uxo[:],Um[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:]) copyout(Up[:])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -128,7 +128,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Up[pos]=2.0*Uo[pos]-Um[pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
-		#pragma acc parallel loop copyin(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Uxp[:Nx*Ny],Uxm[:Nx*Ny]) present(stencil[:nx*ny],vel[:nx*ny])
+		#pragma acc parallel loop copyin(Uxo[:],Uo[:],Uxm[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:]) copyout(Uxp[:])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -145,7 +145,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uxp[pos]=2.0*Uxo[pos]-Uxm[pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
 		
-		#pragma acc parallel loop copyin(Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Uyp[:Nx*Ny],Uym[:Nx*Ny]) present(stencil[:nx*ny],vel[:nx*ny])
+		#pragma acc parallel loop copyin(Uyo[:],Uxo[:],Uo[:],Uym[:],vel[:nx*ny],stencil[:nx*ny]) copyout(Uyp[:])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
@@ -166,9 +166,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//store wavefield for ABC calculation
-		#pragma acc data copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny],Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Um[:Nx*Ny],Uxm[:Nx*Ny],Uym[:Nx*Ny])
-		{
-		#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny],Uo[:Nx*Ny],Uxo[:Nx*Ny],Uyo[:Nx*Ny],Um[:Nx*Ny],Uxm[:Nx*Ny],Uym[:Nx*Ny])
+		#pragma acc parallel loop copyin(U[1:2][:Ny*Nx],Uy[1:2][:Ny*Nx],Ux[1:2][:Ny*Nx],Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx],Uxp[:Ny*Nx],Uxo[:Ny*Nx],Uxm[:Ny*Nx],Up[:Ny*Nx],Uo[:Ny*Nx],Um[:Ny*Nx]) copyout(Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx],U[:5][:Ny*Nx])
 		for(int j=0; j<Nx*Ny;j++)
 		{
 			U[0][j]=U[1][j];
@@ -191,8 +189,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 
 		//calculate ABC higdon boundary
-		
-		#pragma acc parallel loop present(left_sstep[:81],right_sstep[:81],tstep[:81],left_cfabc[:ny][:81],right_cfabc[:ny][:81],U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny])
+		#pragma acc data copyin(tstep[:81],right_sstep[:81],left_cfabc[:ny][:81],Ux[:][:],right_cfabc[:ny][:81],left_sstep[:81],U[:][:],Uy[:][:]) copyout(Uxp[:],Uyp[:],Up[:])
 		for (int j=1;j<Ny-1;j++)
 		{	
 			double Ubdrleft=0;
@@ -257,7 +254,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		}
 		
-		#pragma acc parallel loop present(bottom_sstep[:81],tstep[:81],bottom_cfabc[:nx][:81],U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny],Up[:Nx*Ny],Uxp[:Nx*Ny],Uyp[:Nx*Ny]) 
+		#pragma acc parallel loop copyin(Uy[:][:],Ux[:][:],U[:][:],tstep[:81],bottom_sstep[:81],bottom_cfabc[:nx][:81]) copyout(Uxp[(Ny*Nx)-nx-1:nx],Uyp[(Ny*Nx)-nx-1:nx],Up[(Ny*Nx)-nx-1:nx])
 		for (int j=1;j<Nx-1;j++)
 		{
 			double Ubdrbottom=0;
@@ -290,21 +287,21 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 				Uyp[Ny*Nx-Nx+j]=Uybdrbottom;
 		}
-		}
 		
-		#pragma acc parallel loop copyin(Uo[:nx*ny],Up[:nx*ny],Um[:nx*ny],Uxo[:nx*ny],Uxp[:nx*ny],Uxm[:nx*ny],Uyo[:nx*ny],Uyp[:nx*ny],Uym[:nx*ny])  present(stencil[:nx*ny]) 
+		#pragma acc parallel loop copy(Uyo[:],Uxo[:],Uo[:]) copyin(stencil[:nx*ny],Uyp[:],Uxp[:],Up[:]) copyout(Uym[:],Uxm[:],Um[:])
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
 			Um[pos]=Uo[pos];
 			Uo[pos]=Up[pos];
+			
 			Uxm[pos]=Uxo[pos];
 			Uxo[pos]=Uxp[pos];
 			Uym[pos]=Uyo[pos];
 			Uyo[pos]=Uyp[pos];
 		}
 		
-		#pragma acc kernels copyout(u[:nt][:nx*ny]) copyin(Up[:Nx*Ny]) present(stencil[:nx*ny])
+		#pragma acc kernels copyin(stencil[:nx],Up[:]) copyout(u[i+1][:nx])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
