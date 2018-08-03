@@ -1,6 +1,5 @@
-==16967== NVPROF is profiling process 16967, command: ./wve_nacdgpu coba Velocity.txt fwdset.txt
-==16967== Profiling application: ./wve_nacdgpu coba Velocity.txt fwdset.txt
-Create Record with Source Location (0,10)
+==31584== NVPROF is profiling process 31584, command: ./wve_nacdgpu tr vel.txt fwdset.txt
+Create Record with Source Location (0,20)
 Calculating Wave solution with FD2 .... 
 Calculating Wavefield ... 0.0%
 Calculating Wavefield ... 10.0%
@@ -12,6 +11,8 @@ Calculating Wavefield ... 60.0%
 Calculating Wavefield ... 70.0%
 Calculating Wavefield ... 80.0%
 Calculating Wavefield ... 90.0%
+time: 5048.1
+==31584== Profiling application: ./wve_nacdgpu tr vel.txt fwdset.txt
 Writing Wavefield ... 0.0%
 Writing Wavefield ... 10.0%
 Writing Wavefield ... 20.0%
@@ -23,105 +24,146 @@ Writing Wavefield ... 70.0%
 Writing Wavefield ... 80.0%
 Writing Wavefield ... 90.0%
 Writing is done
-==16967== Profiling result:
+==31584== Profiling result:
 Time(%)      Time     Calls       Avg       Min       Max  Name
- 20.96%  1.39373s      5000  278.75us  263.91us  385.10us  wvenacd_154_gpu(double*, int, int, int, double, double, double, double)
- 19.94%  1.32541s      5000  265.08us  120.26us  512.53us  wvenacd_307_gpu(double*, int, int, int, double, double, double, double)
- 19.25%  1.27984s      5000  255.97us  242.21us  563.57us  wvenacd_137_gpu(double*, int, int, int, double, double, double, double)
- 19.02%  1.26434s      5000  252.87us  213.83us  1.7822ms  wvenacd_118_gpu(double*, int, int, int, double, double, double, double)
- 13.11%  871.86ms      5000  174.37us  171.14us  3.0398ms  wvenacd_174_gpu(double*, int, int, int, double, double, double, double)
-  5.15%  342.17ms      5000  68.434us  67.137us  74.498us  wvenacd_296_gpu(double*, int, int, int, double, double, double, double)
-  1.19%  79.127ms      5000  15.825us  15.072us  475.56us  wvenacd_197_gpu(double*, int, int, int, double, double, double, double)
-  1.19%  79.009ms      5000  15.801us  15.169us  20.673us  wvenacd_263_gpu(double*, int, int, int, double, double, double, double)
-  0.16%  10.322ms      5000  2.0640us  1.8240us  3.0080us  wvenacd_107_gpu(double*, int, int, int, double, double, double, double)
-  0.04%  2.5769ms         1  2.5769ms  2.5769ms  2.5769ms  wvenacd_37_gpu(double*, int, int, int, double, double, double, double)
-  0.00%  218.31us         1  218.31us  218.31us  218.31us  wvenacd_61_gpu(double*, int, int, int, double, double, double, double)
+ 73.05%  2.44111s     38423  63.532us     960ns  333.96us  [CUDA memcpy HtoD]
+ 19.92%  665.79ms     11985  55.551us     704ns  299.98us  [CUDA memcpy DtoH]
+  1.88%  62.881ms       499  126.01us  122.60us  158.09us  wvenacd_146_gpu(double*, int, int, int, double, double, double, double)
+  1.69%  56.530ms       499  113.29us  99.044us  145.57us  wvenacd_129_gpu(double*, int, int, int, double, double, double, double)
+  1.65%  55.203ms       499  110.63us  95.524us  146.85us  wvenacd_110_gpu(double*, int, int, int, double, double, double, double)
+  0.89%  29.579ms       499  59.277us  58.339us  62.946us  wvenacd_166_gpu(double*, int, int, int, double, double, double, double)
+  0.44%  14.864ms     18463     805ns     672ns  10.368us  __pgi_uacc_cuda_fill_35_gpu
+  0.31%  10.304ms       499  20.649us  20.001us  24.353us  wvenacd_289_gpu(double*, int, int, int, double, double, double, double)
+  0.12%  3.9188ms       499  7.8530us  7.4560us  9.9200us  wvenacd_255_gpu(double*, int, int, int, double, double, double, double)
+  0.02%  835.39us       499  1.6740us  1.6000us  2.5600us  wvenacd_97_gpu(double*, int, int, int, double, double, double, double)
+  0.02%  632.99us       499  1.2680us  1.2160us  1.6960us  wvenacd_305_gpu(double*, int, int, int, double, double, double, double)
+  0.00%  15.489us         1  15.489us  15.489us  15.489us  wvenacd_35_gpu(double*, int, int, int, double, double, double, double)
 
-==16967== Unified Memory profiling result:
-Device "GeForce GTX 1080 Ti (0)"
-   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
-   10131  4.6445KB  4.0000KB  960.00KB  45.95703MB  13.90170ms  Host To Device
-   25298  15.440KB  4.0000KB  868.00KB  381.4570MB  43.41254ms  Device To Host
-   38541         -         -         -           -  711.7276ms  GPU Page fault groups
-Total CPU Page faults: 15480
-
-==16967== API calls:
+==31584== API calls:
 Time(%)      Time     Calls       Avg       Min       Max  Name
- 87.58%  6.73026s     45002  149.55us  1.7230us  3.0421ms  cuStreamSynchronize
-  6.52%  500.78ms     45002  11.127us  9.4450us  244.99us  cuLaunchKernel
-  1.85%  142.47ms    690016     206ns     169ns  232.87us  cuPointerGetAttributes
-  1.66%  127.81ms         1  127.81ms  127.81ms  127.81ms  cuDevicePrimaryCtxRetain
-  1.24%  95.411ms         2  47.705ms     422ns  95.411ms  cuMemFree
-  0.86%  65.817ms         1  65.817ms  65.817ms  65.817ms  cuDevicePrimaryCtxRelease
-  0.27%  20.885ms         3  6.9616ms  81.277us  20.640ms  cuMemAllocManaged
-  0.01%  452.49us         1  452.49us  452.49us  452.49us  cuMemAllocHost
-  0.00%  380.22us         1  380.22us  380.22us  380.22us  cuModuleLoadData
-  0.00%  246.11us         2  123.05us  108.38us  137.73us  cuDeviceTotalMem
-  0.00%  147.43us         1  147.43us  147.43us  147.43us  cuMemAlloc
-  0.00%  17.166us         1  17.166us  17.166us  17.166us  cuStreamCreate
-  0.00%  3.3460us        11     304ns     179ns     963ns  cuModuleGetFunction
-  0.00%  1.3650us         8     170ns     144ns     227ns  cuDeviceGetAttribute
-  0.00%  1.3200us         3     440ns     157ns     975ns  cuDeviceGetCount
-  0.00%  1.2580us         3     419ns     189ns     752ns  cuCtxSetCurrent
-  0.00%  1.2340us         6     205ns     138ns     313ns  cuDeviceGet
-  0.00%     349ns         2     174ns     136ns     213ns  cuDeviceComputeCapability
-  0.00%     212ns         1     212ns     212ns     212ns  cuCtxGetCurrent
+ 67.04%  1.13539s     12477  90.998us  1.0430us  578.18us  cuStreamSynchronize
+  8.88%  150.42ms         1  150.42ms  150.42ms  150.42ms  cuDevicePrimaryCtxRetain
+  6.89%  116.65ms     38423  3.0360us  2.1890us  240.13us  cuMemcpyHtoDAsync
+  5.27%  89.235ms     22456  3.9730us  2.6690us  245.87us  cuLaunchKernel
+  4.56%  77.278ms         1  77.278ms  77.278ms  77.278ms  cuDevicePrimaryCtxRelease
+  1.93%  32.730ms     11985  2.7300us  1.9830us  19.027us  cuMemcpyDtoHAsync
+  1.87%  31.738ms     14264  2.2250us     426ns  281.53us  cuEventSynchronize
+  1.50%  25.439ms     72892     348ns     212ns  240.66us  cuPointerGetAttributes
+  0.84%  14.303ms     14266  1.0020us     737ns  241.69us  cuEventRecord
+  0.57%  9.7363ms         1  9.7363ms  9.7363ms  9.7363ms  cuMemHostAlloc
+  0.32%  5.3365ms         1  5.3365ms  5.3365ms  5.3365ms  cuMemFreeHost
+  0.17%  2.8711ms        39  73.618us  1.9070us  284.99us  cuMemAlloc
+  0.11%  1.9346ms         2  967.29us  335.72us  1.5988ms  cuModuleLoadData
+  0.03%  459.28us         1  459.28us  459.28us  459.28us  cuMemAllocHost
+  0.00%  14.590us         1  14.590us  14.590us  14.590us  cuStreamCreate
+  0.00%  8.1490us        12     679ns     297ns  2.3760us  cuEventCreate
+  0.00%  6.1190us         6  1.0190us     335ns  2.5030us  cuDeviceGet
+  0.00%  5.1740us         8     646ns     471ns     853ns  cuDeviceGetAttribute
+  0.00%  3.6930us         3  1.2310us     534ns  2.4470us  cuDeviceGetCount
+  0.00%  2.9920us        11     272ns     171ns     597ns  cuModuleGetFunction
+  0.00%  2.1780us         4     544ns     197ns     944ns  cuCtxSetCurrent
+  0.00%     882ns         2     441ns     328ns     554ns  cuDeviceComputeCapability
+  0.00%     492ns         1     492ns     492ns     492ns  cuCtxGetCurrent
+  0.00%     239ns         1     239ns     239ns     239ns  cuMemFree
 
-==16967== OpenACC (excl):
+==31584== OpenACC (excl):
 Time(%)      Time     Calls       Avg       Min       Max  Name
- 18.35%  1.40506s      5000  281.01us  87.875us  388.01us  acc_wait@wavesim.cc:154
- 17.47%  1.33790s      5000  267.58us  2.9990us  518.11us  acc_wait@wavesim.cc:307
- 16.92%  1.29549s      5000  259.10us  24.870us  566.54us  acc_wait@wavesim.cc:137
- 16.73%  1.28105s      5000  256.21us  217.00us  1.7852ms  acc_wait@wavesim.cc:118
- 11.54%  883.53ms      5000  176.71us  172.86us  3.0430ms  acc_wait@wavesim.cc:174
-  4.61%  353.06ms      5000  70.612us  66.643us  78.904us  acc_wait@wavesim.cc:296
-  1.19%  90.882ms      5000  18.176us  2.9310us  479.20us  acc_wait@wavesim.cc:197
-  1.18%  90.729ms      5000  18.145us  17.244us  204.63us  acc_wait@wavesim.cc:263
-  0.98%  74.919ms      5000  14.983us  11.876us  215.47us  acc_enqueue_launch@wavesim.cc:118 (_Z15wvenacd_118_gpuPdiiidddd)
-  0.84%  64.362ms      5000  12.872us  11.475us  246.02us  acc_enqueue_launch@wavesim.cc:137 (_Z15wvenacd_137_gpuPdiiidddd)
-  0.78%  59.753ms      5000  11.950us  10.306us  242.42us  acc_enqueue_launch@wavesim.cc:107 (_Z15wvenacd_107_gpuPdiiidddd)
-  0.76%  58.112ms      5000  11.622us  10.394us  211.50us  acc_enqueue_launch@wavesim.cc:197 (_Z15wvenacd_197_gpuPdiiidddd)
-  0.75%  57.410ms      5000  11.481us  10.337us  244.87us  acc_enqueue_launch@wavesim.cc:263 (_Z15wvenacd_263_gpuPdiiidddd)
-  0.74%  56.922ms      5000  11.384us  10.397us  215.95us  acc_enqueue_launch@wavesim.cc:296 (_Z15wvenacd_296_gpuPdiiidddd)
-  0.73%  56.165ms      5000  11.233us  10.411us  215.78us  acc_enqueue_launch@wavesim.cc:174 (_Z15wvenacd_174_gpuPdiiidddd)
-  0.73%  55.938ms      5000  11.187us  10.342us  215.15us  acc_enqueue_launch@wavesim.cc:154 (_Z15wvenacd_154_gpuPdiiidddd)
-  0.73%  55.545ms      5000  11.108us  10.263us  220.73us  acc_enqueue_launch@wavesim.cc:307 (_Z15wvenacd_307_gpuPdiiidddd)
-  0.34%  25.726ms      5000  5.1450us  4.7100us  209.77us  acc_exit_data@wavesim.cc:174
-  0.33%  24.894ms      5000  4.9780us  2.5340us  19.590us  acc_wait@wavesim.cc:107
-  0.32%  24.349ms      5000  4.8690us  4.5750us  209.93us  acc_enter_data@wavesim.cc:174
-  0.32%  24.162ms      5000  4.8320us  4.3660us  236.73us  acc_exit_data@wavesim.cc:197
-  0.31%  24.047ms      5000  4.8090us  4.1970us  237.26us  acc_enter_data@wavesim.cc:197
-  0.27%  20.931ms      5000  4.1860us  3.9590us  209.18us  acc_exit_data@wavesim.cc:296
-  0.26%  19.985ms      5000  3.9960us  3.7930us  208.14us  acc_enter_data@wavesim.cc:296
-  0.25%  19.483ms      5000  3.8960us  3.6840us  207.80us  acc_exit_data@wavesim.cc:263
-  0.24%  18.722ms      5000  3.7440us  3.4160us  209.94us  acc_enter_data@wavesim.cc:118
-  0.24%  18.621ms      5000  3.7240us  3.4470us  208.54us  acc_enter_data@wavesim.cc:263
-  0.22%  16.857ms      5000  3.3710us  3.0980us  204.48us  acc_exit_data@wavesim.cc:118
-  0.21%  16.288ms      5000  3.2570us  2.9380us  211.54us  acc_exit_data@wavesim.cc:137
-  0.21%  16.196ms      5000  3.2390us  2.9490us  236.28us  acc_exit_data@wavesim.cc:154
-  0.20%  14.996ms      5000  2.9990us  2.7630us  208.04us  acc_enter_data@wavesim.cc:154
-  0.19%  14.893ms      5000  2.9780us  2.8030us  206.48us  acc_enter_data@wavesim.cc:137
-  0.12%  8.9231ms      5000  1.7840us  1.5920us  205.14us  acc_exit_data@wavesim.cc:307
-  0.11%  8.4303ms      5000  1.6860us  1.5760us  14.467us  acc_exit_data@wavesim.cc:107
-  0.10%  7.9241ms      5000  1.5840us  1.4190us  206.29us  acc_enter_data@wavesim.cc:307
-  0.10%  7.7913ms      5000  1.5580us  1.4120us  245.28us  acc_enter_data@wavesim.cc:107
-  0.07%  5.3279ms      5000  1.0650us     973ns  4.8370us  acc_compute_construct@wavesim.cc:118
-  0.07%  5.2381ms      5000  1.0470us     925ns  240.37us  acc_compute_construct@wavesim.cc:263
-  0.07%  5.1027ms      5000  1.0200us     881ns  202.64us  acc_compute_construct@wavesim.cc:137
-  0.06%  4.9126ms      5000     982ns     918ns  1.5390us  acc_compute_construct@wavesim.cc:174
-  0.06%  4.8769ms      5000     975ns     865ns  208.08us  acc_compute_construct@wavesim.cc:197
-  0.06%  4.8557ms      5000     971ns     903ns  2.9080us  acc_compute_construct@wavesim.cc:296
-  0.06%  4.7772ms      5000     955ns     840ns  204.79us  acc_compute_construct@wavesim.cc:307
-  0.06%  4.6378ms      5000     927ns     849ns  13.687us  acc_compute_construct@wavesim.cc:154
-  0.06%  4.5183ms      5000     903ns     830ns  15.435us  acc_compute_construct@wavesim.cc:107
-  0.03%  2.5704ms         1  2.5704ms  2.5704ms  2.5704ms  acc_wait@wavesim.cc:37
-  0.01%  388.84us         1  388.84us  388.84us  388.84us  acc_device_init
-  0.00%  221.97us         1  221.97us  221.97us  221.97us  acc_wait@wavesim.cc:61
-  0.00%  52.361us         1  52.361us  52.361us  52.361us  acc_enqueue_launch@wavesim.cc:37 (_Z14wvenacd_37_gpuPdiiidddd)
-  0.00%  23.808us         1  23.808us  23.808us  23.808us  acc_enqueue_launch@wavesim.cc:61 (_Z14wvenacd_61_gpuPdiiidddd)
-  0.00%  20.233us         1  20.233us  20.233us  20.233us  acc_compute_construct@wavesim.cc:37
-  0.00%  11.918us         1  11.918us  11.918us  11.918us  acc_enter_data@wavesim.cc:37
-  0.00%  5.4540us         1  5.4540us  5.4540us  5.4540us  acc_exit_data@wavesim.cc:37
-  0.00%  1.5860us         1  1.5860us  1.5860us  1.5860us  acc_compute_construct@wavesim.cc:61
-  0.00%  1.2960us         1  1.2960us  1.2960us  1.2960us  acc_enter_data@wavesim.cc:61
-  0.00%  1.2950us         1  1.2950us  1.2950us  1.2950us  acc_exit_data@wavesim.cc:61
+ 14.84%  706.23ms       499  1.4153ms  1.3872ms  4.6685ms  acc_enter_data@wavesim.cc:166
+ 11.65%  554.71ms       499  1.1116ms  1.0871ms  2.0814ms  acc_enter_data@wavesim.cc:189
+ 11.62%  553.24ms       998  554.35us  3.2850us  2.7892ms  acc_wait@wavesim.cc:189
+ 10.96%  521.48ms       499  1.0451ms  1.0106ms  1.2953ms  acc_enter_data@wavesim.cc:255
+  5.99%  285.01ms       998  285.58us  38.509us  674.14us  acc_wait@wavesim.cc:302
+  4.54%  216.15ms       499  433.17us  426.94us  491.30us  acc_enter_data@wavesim.cc:289
+  4.33%  206.01ms      1497  137.61us  59.762us  344.50us  acc_wait@wavesim.cc:166
+  3.82%  182.02ms       499  364.77us  357.25us  397.87us  acc_enter_data@wavesim.cc:110
+  3.59%  171.03ms       499  342.74us  328.13us  599.15us  acc_enter_data@wavesim.cc:129
+  3.56%  169.62ms      1497  113.31us  9.0100us  557.01us  acc_wait@wavesim.cc:255
+  3.36%  160.16ms       499  320.96us  309.11us  547.10us  acc_enter_data@wavesim.cc:146
+  3.11%  147.87ms      1497  98.775us  47.286us  162.05us  acc_wait@wavesim.cc:146
+  2.97%  141.56ms      1497  94.564us  57.242us  147.75us  acc_wait@wavesim.cc:129
+  1.94%  92.470ms       499  185.31us  178.33us  426.77us  acc_wait@wavesim.cc:309
+  1.78%  84.795ms       998  84.965us  2.1810us  148.79us  acc_wait@wavesim.cc:110
+  1.76%  83.899ms     18463  4.5440us  3.3700us  246.77us  acc_enqueue_launch@(runtime):34 (__pgi_uacc_cuda_fill_35_gpu)
+  1.07%  50.719ms       499  101.64us  14.523us  428.18us  acc_exit_data@wavesim.cc:289
+  0.89%  42.190ms      1497  28.182us  2.3160us  59.401us  acc_wait@wavesim.cc:289
+  0.83%  39.577ms      9980  3.9650us  2.7120us  17.302us  acc_enqueue_upload@wavesim.cc:189
+  0.74%  35.356ms      8982  3.9360us  2.6980us  18.253us  acc_enqueue_upload@wavesim.cc:255
+  0.69%  32.801ms       499  65.732us  62.765us  85.599us  acc_enter_data@wavesim.cc:302
+  0.62%  29.741ms       499  59.601us  17.845us  595.81us  acc_exit_data@wavesim.cc:166
+  0.60%  28.785ms       499  57.685us  34.923us  282.81us  acc_exit_data@wavesim.cc:189
+  0.52%  24.630ms      5988  4.1130us  3.1310us  254.27us  acc_enqueue_upload@wavesim.cc:166
+  0.29%  13.682ms       499  27.418us  25.217us  264.35us  acc_exit_data@wavesim.cc:255
+  0.26%  12.543ms      2994  4.1890us  3.4600us  240.52us  acc_enqueue_download@wavesim.cc:302
+  0.26%  12.468ms      2994  4.1640us  3.5270us  245.00us  acc_enqueue_download@wavesim.cc:106
+  0.26%  12.190ms      3493  3.4890us  3.0290us  27.277us  acc_enqueue_upload@wavesim.cc:289
+  0.23%  10.718ms      2994  3.5790us  3.0250us  237.47us  acc_enqueue_upload@wavesim.cc:146
+  0.22%  10.689ms      2994  3.5690us  3.0200us  240.89us  acc_enqueue_upload@wavesim.cc:129
+  0.22%  10.400ms      2994  3.4730us  3.0260us  7.0290us  acc_enqueue_upload@wavesim.cc:110
+  0.21%  9.7762ms         1  9.7762ms  9.7762ms  9.7762ms  acc_exit_data@wavesim.cc:32
+  0.20%  9.6739ms       499  19.386us  18.897us  26.788us  acc_exit_data@wavesim.cc:302
+  0.15%  7.0920ms      1497  4.7370us  3.6630us  246.21us  acc_enqueue_download@wavesim.cc:289
+  0.14%  6.8672ms      1497  4.5870us  3.5110us  10.889us  acc_enqueue_download@wavesim.cc:255
+  0.11%  5.4707ms       499  10.963us  9.5390us  250.98us  acc_exit_data@wavesim.cc:97
+  0.10%  4.7932ms       998  4.8020us  3.6930us  15.553us  acc_enqueue_download@wavesim.cc:189
+  0.10%  4.5843ms       499  9.1860us  8.1920us  20.968us  acc_wait@wavesim.cc:106
+  0.10%  4.5230ms       499  9.0640us  8.5170us  16.904us  acc_exit_data@wavesim.cc:129
+  0.09%  4.4982ms       499  9.0140us  8.4680us  17.981us  acc_exit_data@wavesim.cc:110
+  0.09%  4.4043ms       499  8.8260us  8.2870us  16.878us  acc_exit_data@wavesim.cc:146
+  0.09%  4.1456ms       499  8.3070us  6.3510us  246.28us  acc_enqueue_launch@wavesim.cc:289 (_Z15wvenacd_289_gpuPdiiidddd)
+  0.09%  4.0947ms       499  8.2050us  7.4210us  219.32us  acc_enter_data@wavesim.cc:97
+  0.08%  3.9065ms       998  3.9140us  3.2000us  7.7180us  acc_enqueue_upload@wavesim.cc:302
+  0.08%  3.8986ms       499  7.8120us  5.9050us  247.28us  acc_enqueue_launch@wavesim.cc:110 (_Z15wvenacd_110_gpuPdiiidddd)
+  0.07%  3.1712ms       499  6.3550us  5.8720us  19.112us  acc_enqueue_launch@wavesim.cc:97 (_Z14wvenacd_97_gpuPdiiidddd)
+  0.07%  3.1294ms       499  6.2710us  5.7720us  16.153us  acc_enqueue_launch@wavesim.cc:129 (_Z15wvenacd_129_gpuPdiiidddd)
+  0.06%  3.0595ms       499  6.1310us  5.7270us  9.9630us  acc_enqueue_launch@wavesim.cc:146 (_Z15wvenacd_146_gpuPdiiidddd)
+  0.06%  3.0450ms       499  6.1020us  5.6240us  9.9890us  acc_enqueue_launch@wavesim.cc:166 (_Z15wvenacd_166_gpuPdiiidddd)
+  0.06%  2.9581ms       499  5.9280us  5.4380us  12.496us  acc_enqueue_launch@wavesim.cc:255 (_Z15wvenacd_255_gpuPdiiidddd)
+  0.06%  2.6630ms       499  5.3360us  4.9720us  8.4750us  acc_enqueue_download@wavesim.cc:309
+  0.05%  2.5744ms       499  5.1590us  4.7650us  14.427us  acc_enqueue_download@wavesim.cc:129
+  0.05%  2.5572ms       499  5.1240us  4.7380us  19.532us  acc_enqueue_download@wavesim.cc:146
+  0.05%  2.5368ms       499  5.0830us  4.7430us  8.7030us  acc_enqueue_download@wavesim.cc:166
+  0.05%  2.4348ms       499  4.8790us  4.4660us  16.968us  acc_enqueue_launch@wavesim.cc:305 (_Z15wvenacd_305_gpuPdiiidddd)
+  0.05%  2.3046ms         1  2.3046ms  2.3046ms  2.3046ms  acc_wait@wavesim.cc:46
+  0.04%  1.7850ms       499  3.5770us  1.9670us  6.1010us  acc_wait@wavesim.cc:97
+  0.03%  1.6508ms       499  3.3080us  1.8510us  4.0090us  acc_wait@wavesim.cc:305
+  0.01%  661.42us         1  661.42us  661.42us  661.42us  acc_enter_data@wavesim.cc:32
+  0.01%  617.40us       499  1.2370us  1.0490us  1.7410us  acc_compute_construct@wavesim.cc:255
+  0.01%  570.88us       499  1.1440us  1.0230us  8.5600us  acc_compute_construct@wavesim.cc:166
+  0.01%  555.81us       499  1.1130us     971ns  1.6520us  acc_compute_construct@wavesim.cc:110
+  0.01%  551.18us       499  1.1040us     954ns  13.332us  acc_compute_construct@wavesim.cc:146
+  0.01%  547.95us       499  1.0980us     983ns  1.4040us  acc_compute_construct@wavesim.cc:289
+  0.01%  539.88us       499  1.0810us     962ns  1.5210us  acc_compute_construct@wavesim.cc:129
+  0.01%  525.69us       499  1.0530us     928ns  2.0890us  acc_compute_construct@wavesim.cc:97
+  0.01%  512.71us       499  1.0270us     902ns  13.989us  acc_compute_construct@wavesim.cc:302
+  0.01%  346.23us         1  346.23us  346.23us  346.23us  acc_device_init@wavesim.cc:32
+  0.00%  68.411us         9  7.6010us  4.0120us  32.292us  acc_enqueue_download@wavesim.cc:46
+  0.00%  19.752us         1  19.752us  19.752us  19.752us  acc_exit_data@wavesim.cc:312
+  0.00%  17.646us         1  17.646us  17.646us  17.646us  acc_wait@wavesim.cc:35
+  0.00%  16.383us         1  16.383us  16.383us  16.383us  acc_enqueue_launch@wavesim.cc:35 (_Z14wvenacd_35_gpuPdiiidddd)
+  0.00%  6.9740us         1  6.9740us  6.9740us  6.9740us  acc_compute_construct@wavesim.cc:32
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_delete@wavesim.cc:146
+  0.00%       0ns      4990       0ns       0ns       0ns  acc_delete@wavesim.cc:302
+  0.00%       0ns      1996       0ns       0ns       0ns  acc_delete@wavesim.cc:309
+  0.00%       0ns     13972       0ns       0ns       0ns  acc_create@wavesim.cc:189
+  0.00%       0ns         1       0ns       0ns       0ns  acc_alloc@wavesim.cc:110
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_create@wavesim.cc:110
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_delete@wavesim.cc:166
+  0.00%       0ns         6       0ns       0ns       0ns  acc_alloc@wavesim.cc:97
+  0.00%       0ns     12475       0ns       0ns       0ns  acc_delete@wavesim.cc:289
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_create@wavesim.cc:129
+  0.00%       0ns         9       0ns       0ns       0ns  acc_delete@wavesim.cc:46
+  0.00%       0ns     12475       0ns       0ns       0ns  acc_create@wavesim.cc:255
+  0.00%       0ns         3       0ns       0ns       0ns  acc_alloc@wavesim.cc:302
+  0.00%       0ns      7485       0ns       0ns       0ns  acc_delete@wavesim.cc:189
+  0.00%       0ns         9       0ns       0ns       0ns  acc_alloc@wavesim.cc:32
+  0.00%       0ns      2994       0ns       0ns       0ns  acc_create@wavesim.cc:97
+  0.00%       0ns      2994       0ns       0ns       0ns  acc_delete@wavesim.cc:106
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_create@wavesim.cc:146
+  0.00%       0ns      1996       0ns       0ns       0ns  acc_create@wavesim.cc:302
+  0.00%       0ns         6       0ns       0ns       0ns  acc_alloc@wavesim.cc:166
+  0.00%       0ns         9       0ns       0ns       0ns  acc_create@wavesim.cc:32
+  0.00%       0ns      3493       0ns       0ns       0ns  acc_delete@wavesim.cc:129
+  0.00%       0ns      7485       0ns       0ns       0ns  acc_create@wavesim.cc:166
+  0.00%       0ns      4990       0ns       0ns       0ns  acc_create@wavesim.cc:289
+  0.00%       0ns     13972       0ns       0ns       0ns  acc_delete@wavesim.cc:255
+  0.00%       0ns        13       0ns       0ns       0ns  acc_alloc@wavesim.cc:189
