@@ -145,7 +145,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D2x3y=-3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
 					+3.0/2.0/h/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos-Nx-1]+Uy[3][pos+Nx-1]+Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]-2.0*Uy[3][pos-Nx]);
 					
-			Uy[3][4][pos]=2.0*Uy[3][3][pos]-Uy[3][2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
+			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
 
 
@@ -173,15 +173,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 				Ux[4][j*Nx+1]=Uxbdrleft;
 
-			double Uy[3]bdrleft=0;
-			#pragma acc loop reduction(+:Uy[3]bdrleft)
+			double Uybdrleft=0;
+			#pragma acc loop reduction(+:Uybdrleft)
 			for (int k=0;k<81;k++)
 			{
 				int tshift=tstep[k];
 				int pos=left_sstep[k];
-				Uy[3]bdrleft+=-Uy[3][4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+				Uybdrleft+=-Uy[3][4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
 			}
-				Uy[3][4][j*Nx+1]=Uy[3]bdrleft;
+				Uy[4][j*Nx+1]=Uybdrleft;
 
 			double Ubdrright=0;
 			#pragma acc loop reduction(+:Ubdrright)
@@ -203,15 +203,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 				Ux[4][(j-1)*Nx-2]=Uxbdrright;			
 
-			double Uy[3]bdrright=0;
-			#pragma acc loop reduction(+:Uy[3]bdrright)
+			double Uybdrright=0;
+			#pragma acc loop reduction(+:Uybdrright)
 			for (int k=0;k<81;k++)
 			{
 				int tshift=tstep[k];
 				int pos=right_sstep[k];
-				Uy[3]bdrright+=-Uy[3][4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
+				Uybdrright+=-Uy[3][4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				Uy[3][4][(j-1)*Nx-2]=Uy[3]bdrright;			
+				Uy[4][(j-1)*Nx-2]=Uybdrright;			
 
 		}
 		
@@ -238,15 +238,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 				Ux[4][Ny*Nx-Nx+j]=Uxbdrbottom;
 
-			double Uy[3]bdrbottom=0;
-			#pragma acc loop reduction(+:Uy[3]bdrbottom)
+			double Uybdrbottom=0;
+			#pragma acc loop reduction(+:Uybdrbottom)
 			for (int k=0;k<81;k++)
 			{
 				int tshift=tstep[k];
 				int pos=bottom_sstep[k];
-				Uy[3]bdrbottom+=-Uy[3][4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
+				Uybdrbottom+=-Uy[3][4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
 			}
-				Uy[3][4][Ny*Nx-Nx+j]=Uy[3]bdrbottom;
+				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
 		}
 		
 		#pragma acc parallel loop 
@@ -264,10 +264,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Ux[3][pos]=Ux[4][pos];
 			
 			
-			Uy[3][0][pos]=Uy[3][1][pos];
-			Uy[3][1][pos]=Uy[3][2][pos];
-			Uy[3][2][pos]=Uy[3][3][pos];
-			Uy[3][3][pos]=Uy[3][4][pos];
+			Uy[0][pos]=Uy[1][pos];
+			Uy[1][pos]=Uy[2][pos];
+			Uy[2][pos]=Uy[3][pos];
+			Uy[3][pos]=Uy[4][pos];
 		}
 		
 		#pragma acc kernels
