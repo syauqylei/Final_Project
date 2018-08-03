@@ -92,7 +92,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		if((i)%(nt/10)==0){
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		//Top neumann boundary
-		#pragma acc parallel loop 
+		#pragma acc parallel loop present(U[3][0:Nx],Ux[3][0:Nx],Uy[3][0:Nx],U[3][Nx*2:Nx*3],Ux[3][Nx*2:Nx*3],Uy[3][Nx*2:Nx*3]) 
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
