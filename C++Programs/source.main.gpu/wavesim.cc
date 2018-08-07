@@ -102,9 +102,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		
 		//Source
 		int source_loc=stencil[srcloc];
+		#pragma acc kernels
+		{
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-		#pragma acc update device(U[:5][:Nx*Ny])
-		
+	}
 		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
