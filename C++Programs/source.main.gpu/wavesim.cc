@@ -284,7 +284,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 		
 		#pragma acc wait
-		#pragma acc kernels copyout(u[i:i+1][0:nx*ny])
+		#pragma acc kernels copyout(u[i+1][0:nx*ny])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
