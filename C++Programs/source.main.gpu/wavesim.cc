@@ -98,13 +98,13 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
 			Uy[3][j]=Uy[3][j+2*Nx];
-			}
-		std::cout<<i<<"\n";
+				}
 		
 		//Source
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 		
+		std::cout<<i<<"\n";
 		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
@@ -161,6 +161,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 					
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
+		
+		std::cout<<i<<"\n";
 		//calculate ABC higdon boundary
 		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
