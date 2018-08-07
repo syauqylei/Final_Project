@@ -9,6 +9,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int Nx=nx+2;
 	int Ny=ny+2;
 	
+	#pragma acc enter data copyin(vel[0:nx*ny])
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
@@ -292,6 +293,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	#pragma acc exit data delete(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	#pragma acc exit data delete(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	#pragma acc exit data delete(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	#pragma acc exit data delete(vel[0:nx*ny])
 	free_mat_mem(U); free_mat_mem(Ux); free_mat_mem(Uy);
 	free_mat_mem(left_cfabc); free_mat_mem(right_cfabc); free_mat_mem(bottom_cfabc);
 	delete [] left_sstep; delete [] right_sstep; delete [] bottom_sstep; delete [] tstep;
