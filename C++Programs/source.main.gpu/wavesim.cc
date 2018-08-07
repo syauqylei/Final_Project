@@ -83,7 +83,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	
 	double t;
-	#pragma acc data present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny])
+	#pragma acc data present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -282,7 +282,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels
+		#pragma acc kernels copyout(u[i:i+1][0:nx*ny])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
