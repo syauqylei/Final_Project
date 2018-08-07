@@ -104,7 +104,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 		
-		std::cout<<i<<"\n";
 		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
@@ -162,7 +161,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
 		
-		std::cout<<i<<"\n";
 		//calculate ABC higdon boundary
 		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
@@ -263,7 +261,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
 		}
 		
-		std::cout<<i<<"\n";
 		#pragma acc parallel loop 
 		for (int j=0;j<nx*ny;j++)	
 		{
@@ -278,23 +275,18 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Ux[2][pos]=Ux[3][pos];
 			Ux[3][pos]=Ux[4][pos];
 			
-			
 			Uy[0][pos]=Uy[1][pos];
 			Uy[1][pos]=Uy[2][pos];
 			Uy[2][pos]=Uy[3][pos];
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		std::cout<<i<<"\n";
-		#pragma acc kernels copyout(u[i+1][0:nx])
+		#pragma acc kernels
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
 			u[i+1][j]=U[4][pos];
 		}
-		
-		std::cout<<i<<"\n";
-		
 	}
 	#pragma acc exit data delete(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	#pragma acc exit data delete(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
