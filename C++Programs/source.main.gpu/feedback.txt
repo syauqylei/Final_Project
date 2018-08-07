@@ -1,99 +1,104 @@
 pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel main.cc
 pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel  wavesim.cc
 wvenacd(double *, int, int, int, double, double, double, double):
-     18, Generating enter data create(Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx],U[:5][:Ny*Nx])
-         Generating present(U[:5][:Ny*Nx],Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx])
-     24, Loop is parallelizable
-     26, Loop is parallelizable
+     16, Generating enter data create(Ux[:5][:Ny*Nx],Uy[:5][:Ny*Nx],U[:5][:Ny*Nx])
+         Generating present(U[:5][:Ny*Nx],Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
          Accelerator kernel generated
          Generating Tesla code
-         24, #pragma acc loop gang, vector(4) /* blockIdx.y threadIdx.y */
-         26, #pragma acc loop gang, vector(32) /* blockIdx.x threadIdx.x */
-     43, Unrolled inner loop 4 times
-     82, Accelerator kernel generated
+         22, #pragma acc loop gang /* blockIdx.x */
+         25, #pragma acc loop vector(128) /* threadIdx.x */
+     25, Loop is parallelizable
+     40, Generating enter data create(stencil[:nx*ny])
+     44, Unrolled inner loop 4 times
+     51, Generating update device(stencil[:nx*ny])
+     58, Generating enter data create(tstep[:81],right_sstep[:81],left_sstep[:81],bottom_sstep[:81])
+     66, Generating update device(right_sstep[:81],tstep[:81],left_sstep[:81],bottom_sstep[:81])
+     68, Generating enter data create(right_cfabc[:ny][:81],left_cfabc[:ny][:81],bottom_cfabc[:nx][:81])
+     85, Generating update device(left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81])
+     91, Accelerator kernel generated
          Generating Tesla code
-         87, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     82, Generating implicit copyin(Uy[3][Nx*2:nx+2],Ux[3][Nx*2:nx+2])
-         Generating implicit copyout(Ux[3][:nx+2],Uy[3][:nx+2])
+         94, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+     91, Generating implicit copyin(Uy[3][Nx*2:nx+2],Ux[3][Nx*2:nx+2])
+         Generating implicit copyout(Uy[3][:nx+2],Ux[3][:nx+2])
          Generating implicit copyin(U[3][Nx*2:nx+2])
          Generating implicit copyout(U[3][:nx+2])
-     91, FMA (fused multiply-add) instruction(s) generated
-     95, Accelerator kernel generated
+     98, FMA (fused multiply-add) instruction(s) generated
+    102, Accelerator kernel generated
          Generating Tesla code
-         99, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     95, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
-     99, Accelerator restriction: size of the GPU copy of U,Uy,Ux is unknown
-    115, Accelerator kernel generated
+        106, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    102, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
+    106, Accelerator restriction: size of the GPU copy of U,Uy,Ux is unknown
+    122, Accelerator kernel generated
          Generating Tesla code
-        118, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    115, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
-    118, Accelerator restriction: size of the GPU copy of Ux,U,Uy is unknown
-    132, Accelerator kernel generated
+        125, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    122, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
+    125, Accelerator restriction: size of the GPU copy of Ux,U,Uy is unknown
+    139, Accelerator kernel generated
          Generating Tesla code
-        135, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    132, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
-    135, Accelerator restriction: size of the GPU copy of Uy,Ux,U is unknown
-    152, Accelerator kernel generated
+        142, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    139, Generating implicit copyin(vel[:nx*ny],stencil[:nx*ny])
+    142, Accelerator restriction: size of the GPU copy of Uy,Ux,U is unknown
+    159, Accelerator kernel generated
          Generating Tesla code
-        157, #pragma acc loop gang /* blockIdx.x */
-        161, #pragma acc loop vector(128) /* threadIdx.x */
+        164, #pragma acc loop gang /* blockIdx.x */
+        168, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrleft)
-        171, #pragma acc loop vector(128) /* threadIdx.x */
+        178, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrleft)
-        181, #pragma acc loop vector(128) /* threadIdx.x */
+        188, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrleft)
-        191, #pragma acc loop vector(128) /* threadIdx.x */
+        198, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrright)
-        201, #pragma acc loop vector(128) /* threadIdx.x */
+        208, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrright)
-        211, #pragma acc loop vector(128) /* threadIdx.x */
+        218, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrright)
-    152, Generating implicit copyin(left_sstep[:81],right_cfabc[:ny][:81],left_cfabc[:ny][:81],tstep[:81],right_sstep[:81])
-    157, Accelerator restriction: size of the GPU copy of U,Ux,Uy is unknown
-    161, Accelerator restriction: size of the GPU copy of U is unknown
+    159, Generating implicit copyin(left_sstep[:81],right_cfabc[:ny][:81],left_cfabc[:ny][:81],tstep[:81],right_sstep[:81])
+    164, Accelerator restriction: size of the GPU copy of U,Ux,Uy is unknown
+    168, Accelerator restriction: size of the GPU copy of U is unknown
          Loop is parallelizable
-    171, Accelerator restriction: size of the GPU copy of Ux is unknown
+    178, Accelerator restriction: size of the GPU copy of Ux is unknown
          Loop is parallelizable
-    181, Accelerator restriction: size of the GPU copy of Uy is unknown
+    188, Accelerator restriction: size of the GPU copy of Uy is unknown
          Loop is parallelizable
-    191, Accelerator restriction: size of the GPU copy of U is unknown
+    198, Accelerator restriction: size of the GPU copy of U is unknown
          Loop is parallelizable
-    201, Accelerator restriction: size of the GPU copy of Ux is unknown
+    208, Accelerator restriction: size of the GPU copy of Ux is unknown
          Loop is parallelizable
-    211, Accelerator restriction: size of the GPU copy of Uy is unknown
+    218, Accelerator restriction: size of the GPU copy of Uy is unknown
          Loop is parallelizable
-    219, Accelerator kernel generated
+    226, Accelerator kernel generated
          Generating Tesla code
-        222, #pragma acc loop gang /* blockIdx.x */
-        226, #pragma acc loop vector(128) /* threadIdx.x */
+        229, #pragma acc loop gang /* blockIdx.x */
+        233, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrbottom)
-        236, #pragma acc loop vector(128) /* threadIdx.x */
+        243, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrbottom)
-        246, #pragma acc loop vector(128) /* threadIdx.x */
+        253, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrbottom)
-    219, Generating implicit copyout(Ux[4][(Ny*Nx)-nx-1:nx])
+    226, Generating implicit copyout(Ux[4][(Ny*Nx)-nx-1:nx])
          Generating implicit copyin(tstep[:81],bottom_sstep[:81],bottom_cfabc[:nx][:81])
          Generating implicit copyout(Uy[4][(Ny*Nx)-nx-1:nx],U[4][(Ny*Nx)-nx-1:nx])
-    226, Accelerator restriction: size of the GPU copy of U is unknown
+    233, Accelerator restriction: size of the GPU copy of U is unknown
          Loop is parallelizable
-    236, Accelerator restriction: size of the GPU copy of Ux is unknown
+    243, Accelerator restriction: size of the GPU copy of Ux is unknown
          Loop is parallelizable
-    246, Accelerator restriction: size of the GPU copy of Uy is unknown
+    253, Accelerator restriction: size of the GPU copy of Uy is unknown
          Loop is parallelizable
-    253, Accelerator kernel generated
+    260, Accelerator kernel generated
          Generating Tesla code
-        256, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    253, Generating implicit copyin(stencil[:nx*ny])
-    256, Accelerator restriction: size of the GPU copy of U,Ux,Uy is unknown
-    274, Generating implicit copyout(u[i+1][:nx])
+        263, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    260, Generating implicit copyin(stencil[:nx*ny])
+    263, Accelerator restriction: size of the GPU copy of U,Ux,Uy is unknown
+    281, Generating implicit copyout(u[i+1][:nx])
          Generating implicit copyin(stencil[:nx])
-    277, Accelerator restriction: size of the GPU copy of U is unknown
+    284, Accelerator restriction: size of the GPU copy of U is unknown
          Loop is parallelizable
          Accelerator kernel generated
          Generating Tesla code
-        277, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    277, Generating implicit copyin(U[4][:])
-    284, Generating exit data delete(Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx],U[:5][:Ny*Nx])
+        284, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    284, Generating implicit copyin(U[4][:])
+    291, Generating exit data delete(Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx],U[:5][:Ny*Nx])
 pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel arrayman.cc
 pairsortd(int *, double *, int):
       8, Loop unrolled 8 times
