@@ -18,7 +18,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create data on device
 	
-	#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
+	#pragma acc parallel loop copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
 		#pragma acc loop
