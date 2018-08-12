@@ -92,7 +92,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
 		//Top neumann boundary
-		#pragma acc parallel loop copyin(U[2:3][2*Nx:3*Nx],Ux[2:3][2*Nx:3*Nx],Uy[2:3][2*Nx:3*Nx]) copyin(U[2:3][0:Nx],Ux[2:3][0:Nx],Uy[2:3][0:Nx])
+		#pragma acc parallel loop copyin(U[2:3][2*Nx:3*Nx],Ux[2:3][2*Nx:3*Nx],Uy[2:3][2*Nx:3*Nx],U[2:3][0:Nx],Ux[2:3][0:Nx],Uy[2:3][0:Nx])
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
@@ -103,7 +103,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 		//Calculate Wavefield
-		#pragma acc parallel loop
+		#pragma acc parallel loop copyin(U[2:5][0:nx*ny],Ux[2:3][0:nx*ny],Uy[2:3][0:nx*ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -122,7 +122,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop copyin(U[2:3][0:nx*ny],Ux[2:5][0:nx*ny],Uy[2:3][0:nx*ny])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -139,7 +139,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop copyin(U[2:3][0:nx*ny],Ux[2:3][0:nx*ny],Uy[2:5][0:nx*ny])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
