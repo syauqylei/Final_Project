@@ -4,8 +4,6 @@
 #include "arrayman.h"
 #include "abcon.h"
 
-#define index(i,j,N) (i*N+j)
-
 double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
 	int nt=int(T/dt);
 	int Nx=nx+2;

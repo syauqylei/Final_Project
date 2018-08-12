@@ -17,7 +17,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 	
 	//create data on device
-	#pragma acc enter data create(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 
 	#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
@@ -84,7 +83,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	
 	double t;
-	#pragma acc data copy(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny]) present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	#pragma acc data present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -287,7 +286,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			u[i+1][j]=U[4][pos];
 		}
 	}
-	#pragma acc exit data delete(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	#pragma acc exit data delete(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	#pragma acc exit data delete(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	#pragma acc exit data delete(vel[0:nx*ny])
