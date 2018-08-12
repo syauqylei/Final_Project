@@ -17,7 +17,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 	
 	//create data on device
-
+	
 	#pragma acc parallel loop present(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
@@ -82,6 +82,23 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	
+	
+	
+	int *__restrict__ lsd_idc = new int [ny];
+	int *__restrict__ rsd_idc = new int [ny];
+	int *__restrict__ bsd_idc = new int [nx];
+	#pragma acc enter data create(lsd_idc[0:ny],rsd_idc[0:ny],bsd_idc[0:nx])
+	for (int i=1;i<Ny-1;i++)
+	{
+		lsd_idc[i-1]=i*Nx+1;
+		rsd_idc[i-1]=(i+1)*Nx-2;
+	}
+	
+	for (int i=1;i<Nx-1;i++)
+	{
+		bsd_idc[i-1]=Nx*Ny-Nx+i;
+	}
+	
 	double t;
 	#pragma acc data present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	for (int i=0; i<nt-1;i++)
@@ -103,7 +120,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		int source_loc=stencil[srcloc];
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 		//Calculate Wavefield
-		#pragma acc parallel loop copyin(U[2:5][0:nx*ny],Ux[2:3][0:nx*ny],Uy[2:3][0:nx*ny])
+		#pragma acc parallel loop copyin(U[2:5][0:Nx*Ny],Ux[3:4][0:Nx*Ny],Uy[3:4][0:Nx*Ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -122,7 +139,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
-		#pragma acc parallel loop copyin(U[2:3][0:nx*ny],Ux[2:5][0:nx*ny],Uy[2:3][0:nx*ny])
+		#pragma acc parallel loop copyin(U[3:4][0:Nx*Ny],Ux[2:5][0:Nx*Ny],Uy[3:4][0:Nx*Ny])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -139,7 +156,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
 		
-		#pragma acc parallel loop copyin(U[2:3][0:nx*ny],Ux[2:3][0:nx*ny],Uy[2:5][0:nx*ny])
+		#pragma acc parallel loop copyin(U[3:4][0:Nx*Ny],Ux[3:4][0:Nx*Ny],Uy[2:5][0:Nx*Ny])
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
@@ -160,7 +177,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//calculate ABC higdon boundary
-		#pragma acc parallel loop
+		#pragma acc parallel loop copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny])
 		for (int j=1;j<Ny-1;j++)
 		{	
 			double Ubdrleft=0;
@@ -201,7 +218,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=right_sstep[k];
 				Ubdrright+=-U[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				U[4][(j-1)*Nx-2]=Ubdrright;			
+				U[4][(j+1)*Nx-2]=Ubdrright;			
 
 			double Uxbdrright=0;
 			#pragma acc loop reduction(+:Uxbdrright)
@@ -211,7 +228,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=right_sstep[k];
 				Uxbdrright+=-Ux[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				Ux[4][(j-1)*Nx-2]=Uxbdrright;			
+				Ux[4][(j+1)*Nx-2]=Uxbdrright;			
 
 			double Uybdrright=0;
 			#pragma acc loop reduction(+:Uybdrright)
@@ -221,11 +238,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=right_sstep[k];
 				Uybdrright+=-Uy[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				Uy[4][(j-1)*Nx-2]=Uybdrright;			
+				Uy[4][(j+1)*Nx-2]=Uybdrright;			
 
 		}
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop copyin(U[0:5][Nx*Ny-Nx:Nx*Ny],Ux[0:5][Nx*Ny-Nx:Nx*Ny],Uy[0:5][Nx*Ny-Nx:Nx*Ny])
 		for (int j=1;j<Nx-1;j++)
 		{
 			double Ubdrbottom=0;
@@ -279,7 +296,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels
+		#pragma acc kernels copyin(U[4:5][0:Nx*Ny])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
