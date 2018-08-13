@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include <cmath>
+#include <accelmath.h>
 #include "arrayman.h"
 #include "abcon.h"
 
