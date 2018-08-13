@@ -40,7 +40,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int *__restrict__ stencil= new int[nx*ny];
 	#pragma acc enter data create(stencil[0:nx*ny])
 	
-	#pragma acc kernels
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
