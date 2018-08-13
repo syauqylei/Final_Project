@@ -18,7 +18,7 @@ void gen_sstep(int *s_step,int pole){
 	s_step[0]=0;
 	s_step[1]=pole*1;
 	s_step[2]=0;
-
+	
 	for (int i=0;i<3;i++){
 		for (int j=0; j<2;j++){
 			for (int k=0; k<itr[i];k++){
