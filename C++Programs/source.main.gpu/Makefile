@@ -4,7 +4,7 @@ OPT= -ta=tesla:cc60 -Minfo=accel
 NOPT=-fast -Minfo=opt  $(OPT)
 
 all: main.o wavesim.o arrayman.o  abcon.o rnw.o 
-	$(CC) -acc -std=c++11 *.o -o ./wve_nacdgpu $(NOPT)
+	$(CC) -std=c++11 *.o -o ./wve_nacdgpu $(NOPT)
 
 arrayman.o : arrayman.cc
 	$(CC) -std=c++11 -c $(NOPT) arrayman.cc
