@@ -243,7 +243,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		}
 		
-		#pragma acc parallel loop copyin(U[0:5][Nx*Ny-Nx:Nx*Ny],Ux[0:5][Nx*Ny-Nx:Nx*Ny],Uy[0:5][Nx*Ny-Nx:Nx*Ny])
+		#pragma acc parallel loop
 		for (int j=1;j<Nx-1;j++)
 		{
 			double Ubdrbottom=0;
@@ -277,7 +277,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
 		}
 		
-		#pragma acc parallel loop copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny])
+		#pragma acc parallel loop
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
@@ -297,7 +297,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels copyout(u[i+1:i+2][0:nx*ny]) copyin(U[4:5][0:Nx*Ny])
+		#pragma acc kernels copyout(u[i+1:i+2][0:nx*ny])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
