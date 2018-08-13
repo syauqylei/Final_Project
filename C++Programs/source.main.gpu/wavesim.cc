@@ -16,10 +16,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 	
-	#pragma acc enter data create(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
-	
 	//create data on device
-	
+	#pragma acc kernels copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
 		for (int j=0;j<Nx*Ny;j++)
@@ -29,7 +27,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[i][j]=0.0;
 		}
 	}
-	#pragma acc update device(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	
 	
 	//create angle factor for abc higdon
@@ -101,10 +98,13 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Ux[3][j]=Ux[3][j+2*Nx];
 			Uy[3][j]=Uy[3][j+2*Nx];
 				}
-
+		
+		#pragma acc kernels
+		{
 		int source_loc=stencil[srcloc];		
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-
+		}
+		
 		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
@@ -282,7 +282,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels
+		#pragma acc parallel loop 
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
@@ -290,7 +290,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	}
 	
-	#pragma acc exit data delete(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	#pragma acc exit data delete(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	#pragma acc exit data delete(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	#pragma acc exit data delete(vel[0:nx*ny])
