@@ -13,7 +13,7 @@ rnw.o : rnw.cc
 	$(CC) -std=c++11 -c $(NOPT) rnw.cc
 
 abcon.o : abcon.cc
-	$(CC) -std=c++11 -c $(NOPT) abcon.cc
+	$(CC) -acc -std=c++11 -c $(NOPT) abcon.cc
 
 wavesim.o : wavesim.cc
 	$(CC) -std=c++11 -c $(NOPT)  wavesim.cc
