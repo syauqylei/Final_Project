@@ -1,6 +1,6 @@
 CC=pgc++
 TIMER=/usr/bin/time
-OPT= -ta=tesla:cc60,managed -Minfo=accel
+OPT= -ta=tesla:cc60 -Minfo=accel
 NOPT=-fast -Minfo=opt  $(OPT)
 
 all: main.o wavesim.o arrayman.o  abcon.o rnw.o 
