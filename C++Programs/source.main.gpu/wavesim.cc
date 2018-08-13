@@ -103,6 +103,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
+			int source_loc=stencil[srcloc];
 			double cf1,cf2,cf3;
 			double D4x,D4y,D2x2y,UD2xD2y;
 			cf1=vel[j]*vel[j]*dt*dt;
