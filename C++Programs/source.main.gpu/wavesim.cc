@@ -83,25 +83,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	
-	
-	
-	int *__restrict__ lsd_idc = new int [ny];
-	int *__restrict__ rsd_idc = new int [ny];
-	int *__restrict__ bsd_idc = new int [nx];
-	#pragma acc enter data create(lsd_idc[0:ny],rsd_idc[0:ny],bsd_idc[0:nx])
-	for (int i=1;i<Ny-1;i++)
-	{
-		lsd_idc[i-1]=i*Nx+1;
-		rsd_idc[i-1]=(i+1)*Nx-2;
-	}
-	
-	for (int i=1;i<Nx-1;i++)
-	{
-		bsd_idc[i-1]=Nx*Ny-Nx+i;
-	}
-	
 	double t;
-	#pragma acc data copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny]) present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	#pragma acc data copyin(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])  copyout(u[i+1:i+2][0:nx*ny]) present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -297,7 +280,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels copyout(u[i+1:i+2][0:nx*ny])
+		#pragma acc kernels
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
