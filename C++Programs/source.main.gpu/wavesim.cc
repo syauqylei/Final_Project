@@ -76,7 +76,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
 		gen_cfabc(right_cfabc[i],vel[(i+1)*nx-1],dt,h,beta);
 		}
-	#pragm acc kernels
+	#pragma acc kernels
 	for (int i=0;i<nx;i++)
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
