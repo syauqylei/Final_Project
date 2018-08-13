@@ -99,14 +99,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][j]=Uy[3][j+2*Nx];
 				}
 		
-		//Source
-		#pragma acc data present(U)
-		{
-		int source_loc=stencil[srcloc];
-		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
-		std::cout<<U[3][source_loc]<<"\n";
-		}
-		
 		//Calculate Wavefield
 		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
@@ -116,7 +108,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
-
+			
+			U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 			UD2xD2y=(U[3][pos+1]+U[3][pos-1]+U[3][pos+Nx]+U[3][pos-Nx]-4*U[3][pos])/h/h;
 			D4x=-12.0/h/h/h/h*(U[3][pos+1]-2.0*U[3][pos]+U[3][pos-1])+(Ux[3][pos+1]-Ux[3][pos-1])*6.0/h/h/h;
 			D4y=-12.0/h/h/h/h*(U[3][pos+Nx]-2.0*U[3][pos]+U[3][pos-Nx])+6.0/h/h/h*(Uy[3][pos+Nx]-Uy[3][pos-Nx]);
