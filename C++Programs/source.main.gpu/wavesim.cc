@@ -282,7 +282,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc parallel loop copyout(u[i+1:i+2][0:nx])
+		#pragma acc parallel loop copyout(u[0:nt][0:nx])
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
