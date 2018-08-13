@@ -283,7 +283,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[3][pos]=Uy[4][pos];
 		}
 		
-		#pragma acc kernels copyin(
+		#pragma acc kernels
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
