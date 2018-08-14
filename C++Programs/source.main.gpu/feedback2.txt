@@ -1,5 +1,5 @@
-pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel main.cc
-pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel  wavesim.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel main.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel  wavesim.cc
 wvenacd(double *, int, int, int, double, double, double, double):
      14, Generating enter data copyin(vel[:nx*ny])
      17, Generating copyout(U[:5][:Ny*Nx],Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
@@ -77,7 +77,7 @@ wvenacd(double *, int, int, int, double, double, double, double):
          Generating Tesla code
         286, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
     296, Generating exit data delete(left_sstep[:81],bottom_sstep[:81],right_sstep[:81],bottom_cfabc[:nx][:81],right_cfabc[:ny][:81],left_cfabc[:ny][:81],vel[:nx*ny],tstep[:81])
-pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel arrayman.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel arrayman.cc
 pairsortd(int *, double *, int):
       8, Loop unrolled 8 times
      18, Loop unrolled 16 times
@@ -303,7 +303,7 @@ void std::__unguarded_linear_insert<std::pair<int, int> *, __gnu_cxx::__ops::_Va
                                                   37, include "cfloat"
                                                        42, include "float.h"
                                                             56, include "stdc++.h"
-pgc++ -acc -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel abcon.cc
+pgc++ -acc -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel abcon.cc
 gen_sstep(int *, int):
      23, Outer loop unrolled 2 times (completely unrolled)
 gen_tstep(int *):
@@ -311,8 +311,8 @@ gen_tstep(int *):
 gen_cfabc(double *, double, double, double, double *):
      60, Outer loop unrolled 2 times (completely unrolled)
      63, Loop unrolled 8 times
-pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel rnw.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel rnw.cc
 w_dat(const std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> &, double *, double **, double, double, int, int, int, int, double, double, double):
           48, FMA (fused multiply-add) instruction(s) generated
          133, FMA (fused multiply-add) instruction(s) generated
-pgc++ -std=c++11 *.o -o ./wve_nacdgpu -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel
+pgc++ -std=c++11 *.o -o ./wve_nacdgpu -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel
