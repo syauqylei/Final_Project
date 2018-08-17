@@ -18,8 +18,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	int num_gpus=acc_get_num_devices(acc_device_nvidia);
 	
-	int U_start[num_gpus];
-	U_start[0]=0;U_start[1]=Nx*Ny/2-Nx;
+	int U_start[num_gpus];U_start[0]=0;U_start[1]=Nx*Ny/2-Nx;
+	int U_end[num_gpus];U_end[0]=Nx*Ny/2+Nx;U_end[1]=Nx*Ny;
 	int wic_dev_srcloc;
 	
 	if(srcloc<nx*ny/2){wic_dev_srcloc=0;}
