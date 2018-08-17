@@ -101,7 +101,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		{
 			#pragma acc set device_num(d)
 			{
-			#pragma acc enter data copyin(U[0:5][U_start[d]:ij_end[d]],Ux[0:5][U_start[d]:ij_end[d]],Uy[0:5][U_start[d]:U_end[d]])
+			#pragma acc enter data copyin(U[0:5][U_start[d]:U_end[d]],Ux[0:5][U_start[d]:U_end[d]],Uy[0:5][U_start[d]:U_end[d]])
 			#pragma acc enter data copyin(stencil[sten_start[d]:sten_end[d]],vel[sten_start[d]:sten_end[d]])
 			#pragma acc enter data copyin(left_cfabc[v_start[d]:v_end[d]][0:81],right_cfabc[v_start[d]:v_end[d]][0:81],bottom_cfabc[h_start[d]:h_end[d]][0:81])
 			#pragma acc enter data copyin(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
