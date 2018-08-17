@@ -22,7 +22,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int U_end[num_gpus];U_end[0]=Nx*Ny/2+Nx;U_end[1]=Nx*Ny;
 	
 	int sten_start[num_gpus];sten_start[0]=0;sten_start[1]=nx*ny/2;
-	int sten_end[num_gpus];sten_end[0]=nx*ny/2;sten_end[1]nx*ny;
+	int sten_end[num_gpus];sten_end[0]=nx*ny/2;sten_end[1]=nx*ny;
 	
 	int V_start[num_gpus];V_start[0]=0;V_start[1]=ny/2;
 	int V_end[num_gpus];V_end[0]=ny/2;V_end[1]=ny;
