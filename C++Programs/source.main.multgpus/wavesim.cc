@@ -9,6 +9,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int nt=int(T/dt);
 	int Nx=nx+2;
 	int Ny=ny+2;
+
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
@@ -16,17 +17,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 	
 	int num_gpus=acc_get_num_devices(acc_device_nvidia);
-	int U_start[num_gpus]={0,Nx*Ny/2-Nx};
-	int U_end[num_gpus]={Nx*Ny/2+Nx,Nx*Ny};
-	int sten_start[num_gpus]={0,nx*ny/2};
-	int sten_end[num_gpus]={nx*ny/2,nx*ny};
-	int V_start[num_gpus]={0,ny/2};
-	int V_end[num_gpus]={ny/2,ny};
-	int H_start[num_gpus]={0,nx/2};
-	int H_end[num_gpus]={nx/2,nx};
-	int h_start[num_gpus]={0,Nx/2};
-	int h_end[num_gpus]={Nx/2,Nx};
 	
+	int U_start[num_gpus];
+	U_start[0]=0;U_start[1]=Nx*Ny/2-Nx;
 	int wic_dev_srcloc;
 	
 	if(srcloc<nx*ny/2){wic_dev_srcloc=0;}
@@ -105,7 +98,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			#pragma acc enter data copyin(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 			}	
 		}
-		
 		
 		//Top neumann boundary
 		for (int d=0;d<num_gpus;d++)
