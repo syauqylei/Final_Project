@@ -95,7 +95,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	
 	double t;
-	#pragma acc data copyout(u[0:nt][0:nx])
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
