@@ -105,10 +105,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		for (int d=0;d<num_gpus;d++)
 		{
 			#pragma acc set device_num(d)
-			{
 			#pragma acc enter data copyin(U[0:5][U_start[d]:U_end[d]],Ux[0:5][U_start[d]:U_end[d]],Uy[0:5][U_start[d]:U_end[d]])
 			#pragma acc enter data copyin(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
-			}	
 		}
 		
 		//Top neumann boundary
