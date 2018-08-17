@@ -9,16 +9,30 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int nt=int(T/dt);
 	int Nx=nx+2;
 	int Ny=ny+2;
-	
-	#pragma acc enter data copyin(vel[0:nx*ny])
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
 	
+	int num_gpus=get_acc_devices(acc_device_nvidia);
+	int U_start[num_gpus]={0,Nx*Ny/2-Nx};
+	int U_end[num_gpus]={Nx*Ny/2+Nx,Nx*Ny};
+	int sten_start[num_gpus]={0,nx*ny/2};
+	int sten_end[num_gpus]={nx*ny/2,nx*ny};
+	int V_start[num_gpus]={0,ny/2};
+	int V_end[num_gpus]={ny/2,ny};
+	int H_start[num_gpus]={0,nx/2};
+	int H_end[num_gpus]={nx/2,nx};
+	int h_start[num_gpus]={0,Nx/2};
+	int h_end[num_gpus]={Nx/2,Nx};
+	
+	int wic_dev_srcloc;
+	
+	if(srcloc<nx*ny/2){wic_dev_srcloc=0;}
+	else {wic_dev_srcloc=1;}
+	
 	//create data on device
-	#pragma acc kernels copyout(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
 		for (int j=0;j<Nx*Ny;j++)
@@ -39,7 +53,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
-	#pragma acc enter data create(stencil[0:nx*ny])
 	
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
@@ -47,29 +60,23 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		}
 
-	#pragma acc update device(stencil[0:nx*ny])
 	//allocate array spatial operator for ABC
 	int *__restrict__ left_sstep=new int[81];
 	int *__restrict__ right_sstep=new int[81];
 	int *__restrict__ bottom_sstep=new int[81];
 	int *__restrict__ tstep=new int[81];
 
-	#pragma acc enter data create(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	//fill ABC operator
 	gen_sstep(left_sstep,1);
 	gen_sstep(right_sstep,-1);
 	gen_sstep(bottom_sstep,-Nx);
 	gen_tstep(tstep);
 
-	#pragma acc update device(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
-	
 	//allocate array for coefficient of ABC hihgdon
 	double **__restrict__ left_cfabc=alloc_mat(ny,81);
 	double **__restrict__ right_cfabc=alloc_mat(ny,81);
 	double **__restrict__ bottom_cfabc=alloc_mat(nx,81);
 	
-	#pragma acc enter data create(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
-
 	for (int i=0;i<ny;i++)
 		{	
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
@@ -81,10 +88,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
 	
-	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
-	
 	double t;
-	#pragma acc data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny]) copyout(u[0:nt][0:nx]) present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	#pragma acc data copyout(u[0:nt][0:nx])
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -92,14 +97,32 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		if((i)%(nt/10)==0){
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
+		for (int d=0;d<num_gpus;d++)
+		{
+			#pragma acc set device_num(d)
+			{
+			#pragma acc enter data copyin(U[0:5][U_start[d]:ij_end[d]],Ux[0:5][U_start[d]:ij_end[d]],Uy[0:5][U_start[d]:ij_end[d]])
+			#pragma acc enter data copyin(stencil[sten_start[d]:sten_end[d]],vel[sten_start[d]:sten_end[d]])
+			#pragma acc enter data copyin(left_cfabc[v_start[d]:v_end[d]][0:81],right_cfabc[v_start[d]:v_end[d]][0:81],bottom_cfabc[h_start[d]:h_end[d]][0:81])
+			#pragma acc enter data copyin(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+			}	
+		}
+		
+		
 		//Top neumann boundary
-		#pragma acc parallel loop
-		for (int j=0;j<Nx;j++){
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for (int j=h_start[d];j<h_end[d];j++)
+		{
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
 			Uy[3][j]=Uy[3][j+2*Nx];
-				}
+		}
+		}
 		
+		#pragma acc set device(wic_dev_srcloc)
 		#pragma acc kernels
 		{
 		int source_loc=stencil[srcloc];		
@@ -107,8 +130,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 		
 		//Calculate Wavefield
-		#pragma acc parallel loop 
-		for (int j=0; j<nx*ny;j++){
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for (int j=sten_start[d]; j<sten_end[d];j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
 			double D4x,D4y,D2x2y,UD2xD2y;
@@ -125,9 +151,14 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 					+1.0/2.0/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos+Nx-1]-Uy[3][pos-Nx-1]-Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]+2.0*Uy[3][pos-Nx]);
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
+		}
 		
-		#pragma acc parallel loop
-		for(int j=0;j<nx*ny;j++){
+		
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for(int j=sten_start[d]; j<sten_end[d];j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
 			double D5x,Dx4y,D3x2y,UxD2xD2y;
@@ -142,9 +173,13 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 					+3.0/2.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]+Ux[3][pos+Nx-1]+Ux[3][pos-Nx+1]-2.0*Ux[3][pos+1]-2.0*Ux[3][pos-1]);
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
+		}
 		
-		#pragma acc parallel loop
-		for(int j=0;j<nx*ny;j++){
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for(int j=sten_start[d]; j<sten_end[d];j++){
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
 			double cf1,cf2,cf3;
@@ -162,10 +197,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 					
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
-		
+		}
+
 		//calculate ABC higdon boundary
-		#pragma acc parallel loop
-		for (int j=1;j<Ny-1;j++)
+		
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for (int j=V_start[d];j<V_end[d];j++)
 		{	
 			double Ubdrleft=0;
 			#pragma acc loop reduction(+:Ubdrleft)
@@ -173,9 +213,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=left_sstep[k];
-				Ubdrleft+=-U[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+				Ubdrleft+=-U[4+tshift][(j+1)*Nx+1+pos]*left_cfabc[j-1][k];
 			}
-				U[4][j*Nx+1]=Ubdrleft;
+				U[4][(j+1)*Nx+1]=Ubdrleft;
 
 			double Uxbdrleft=0;
 			#pragma acc loop reduction(+:Uxbdrleft)
@@ -183,9 +223,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=left_sstep[k];
-				Uxbdrleft+=-Ux[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+				Uxbdrleft+=-Ux[4+tshift][(j+1)*Nx+1+pos]*left_cfabc[j-1][k];
 			}
-				Ux[4][j*Nx+1]=Uxbdrleft;
+				Ux[4][(j+1)*Nx+1]=Uxbdrleft;
 
 			double Uybdrleft=0;
 			#pragma acc loop reduction(+:Uybdrleft)
@@ -193,9 +233,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=left_sstep[k];
-				Uybdrleft+=-Uy[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+				Uybdrleft+=-Uy[4+tshift][(j+1)*Nx+1+pos]*left_cfabc[j-1][k];
 			}
-				Uy[4][j*Nx+1]=Uybdrleft;
+				Uy[4][(j+1)*Nx+1]=Uybdrleft;
 
 			double Ubdrright=0;
 			#pragma acc loop reduction(+:Ubdrright)
@@ -203,9 +243,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=right_sstep[k];
-				Ubdrright+=-U[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
+				Ubdrright+=-U[4+tshift][(j+2)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				U[4][(j+1)*Nx-2]=Ubdrright;			
+				U[4][(j+2)*Nx-2]=Ubdrright;			
 
 			double Uxbdrright=0;
 			#pragma acc loop reduction(+:Uxbdrright)
@@ -213,9 +253,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=right_sstep[k];
-				Uxbdrright+=-Ux[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
+				Uxbdrright+=-Ux[4+tshift][(j+2)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				Ux[4][(j+1)*Nx-2]=Uxbdrright;			
+				Ux[4][(j+2)*Nx-2]=Uxbdrright;			
 
 			double Uybdrright=0;
 			#pragma acc loop reduction(+:Uybdrright)
@@ -223,14 +263,18 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			{
 				int tshift=tstep[k];
 				int pos=right_sstep[k];
-				Uybdrright+=-Uy[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
+				Uybdrright+=-Uy[4+tshift][(j+2)*Nx-2+pos]*right_cfabc[j-1][k];
 			}
-				Uy[4][(j+1)*Nx-2]=Uybdrright;			
+				Uy[4][(j+2)*Nx-2]=Uybdrright;			
 
 		}
+		}
 		
-		#pragma acc parallel loop
-		for (int j=1;j<Nx-1;j++)
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for (int j=H_start[d];j<H_end[d];j++)
 		{
 			double Ubdrbottom=0;
 			#pragma acc loop reduction(+:Ubdrbottom)
@@ -240,7 +284,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=bottom_sstep[k];
 				Ubdrbottom+=-U[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
 			}
-				U[4][Ny*Nx-Nx+j]=Ubdrbottom;			
+				U[4][Ny*Nx-Nx+j+1]=Ubdrbottom;			
 			
 			double Uxbdrbottom=0;
 			#pragma acc loop reduction(+:Uxbdrbottom)
@@ -250,7 +294,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=bottom_sstep[k];
 				Uxbdrbottom+=-Ux[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
 			}
-				Ux[4][Ny*Nx-Nx+j]=Uxbdrbottom;
+				Ux[4][Ny*Nx-Nx+j+1]=Uxbdrbottom;
 
 			double Uybdrbottom=0;
 			#pragma acc loop reduction(+:Uybdrbottom)
@@ -260,11 +304,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 				int pos=bottom_sstep[k];
 				Uybdrbottom+=-Uy[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
 			}
-				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
+				Uy[4][Ny*Nx-Nx+j+1]=Uybdrbottom;
 		}
-		
-		#pragma acc parallel loop
-		for (int j=0;j<nx*ny;j++)	
+		}
+
+		for (int d=0;d<num_gpus;d++)
+		{
+		#pragma acc set device_num(d)
+		#pragma acc parallel loop async
+		for (int j=sten_start[d];j<sten_start[d];j++)	
 		{
 			int pos=stencil[j];
 			U[0][pos]=U[1][pos];
@@ -282,7 +330,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[2][pos]=Uy[3][pos];
 			Uy[3][pos]=Uy[4][pos];
 		}
-		
+		}
+
+		#pragma acc set device_num(0)
 		#pragma acc parallel loop 
 		for (int j=0;j<nx;j++)
 		{
