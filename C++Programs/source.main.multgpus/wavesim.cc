@@ -20,6 +20,16 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	int U_start[num_gpus];U_start[0]=0;U_start[1]=Nx*Ny/2-Nx;
 	int U_end[num_gpus];U_end[0]=Nx*Ny/2+Nx;U_end[1]=Nx*Ny;
+	
+	int V_start[num_gpus];V_start[0]=0;V_start[1]=ny/2;
+	int V_end[num_gpus];V_end[0]=ny/2;V_end[1]=ny;
+	
+	int H_start[num_gpus];H_start[0]=0;H_start[1]=nx/2;
+	int H_end[num_gpus];H_end[0]=nx/2;H_end[1]=nx;
+	
+	int h_start[num_gpus];U_start[0]=0;U_start[1]=Nx;
+	int h_end[num_gpus];U_end[0]=Nx/2;U_end[1]=Nx;
+	
 	int wic_dev_srcloc;
 	
 	if(srcloc<nx*ny/2){wic_dev_srcloc=0;}
