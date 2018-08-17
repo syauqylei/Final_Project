@@ -3,6 +3,7 @@
 #include <accelmath.h>
 #include "arrayman.h"
 #include "abcon.h"
+#include "openacc.h"
 
 double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
 	int nt=int(T/dt);
@@ -106,7 +107,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 		
 		//Calculate Wavefield
-		#pragma acc parallel loop
+		#pragma acc parallel loop 
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
