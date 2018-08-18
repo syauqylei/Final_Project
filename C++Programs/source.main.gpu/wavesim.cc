@@ -112,7 +112,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
-			double D4x,D4y,D2x2y,UD2xD2y;
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -126,7 +125,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
-			double D5x,Dx4y,D3x2y,UxD2xD2y;
 			
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
@@ -140,7 +138,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		#pragma acc parallel loop
 		for(int j=0;j<nx*ny;j++){
 			int pos=stencil[j];
-			double D4xy,D5y,D2x3y,UyD2xD2y;
 			double cf1,cf2,cf3;
 			
 			cf1=vel[j]*vel[j]*dt*dt;
