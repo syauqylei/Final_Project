@@ -3,7 +3,6 @@
 #include <accelmath.h>
 #include "arrayman.h"
 #include "hider.h"
-#include "abcon.h"
 #include "openacc.h"
 
 double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
