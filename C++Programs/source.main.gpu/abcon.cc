@@ -71,7 +71,7 @@ void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 	cfabc[0]=0;
 	}
 
-#pragma acc routine vector
+#pragma acc routine gang
 double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos)
 {
 	double Ubdr=0;
