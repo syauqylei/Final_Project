@@ -112,6 +112,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
 			double D4x,D4y,D2x2y,UD2xD2y;
+			#pragma acc kernels
+			{
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -120,6 +122,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D4x=d4(U[3],Ux[3],h,pos,1);
 			D4y=d4(U[3],Uy[3],h,pos,Nx);
 			D2x2y=d2x2y(U[3],Ux[3],Uy[3],h,pos,Nx);
+			}
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
@@ -128,6 +131,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
 			double D5x,Dx4y,D3x2y,UxD2xD2y;
+			
+			#pragma acc kernels
+			{
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -136,6 +142,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D5x=d5(U[3],Ux[3],h,pos,1);
 			Dx4y=dx4y(U[3],Uy[3],h,pos,Nx);
 			D3x2y=d3x2y(U[3],Ux[3],h,pos,Nx);
+			}
+			
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
 		
@@ -144,7 +152,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
 			double cf1,cf2,cf3;
-			
+			#pragma acc kernels
+			{
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -153,7 +162,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D4xy=d4xy(U[3],Ux[3],h,pos,Nx);
 			D5y=d5(U[3],Uy[3],h,pos,Nx);
 			D2x3y=d2x3y(U[3],Uy[3],h,pos,Nx);
-					
+			}		
+			
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
 		
@@ -161,106 +171,30 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
 		{	
-			double Ubdrleft=0;
-			#pragma acc loop reduction(+:Ubdrleft)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=left_sstep[k];
-				Ubdrleft+=-U[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
-			}
-				U[4][j*Nx+1]=Ubdrleft;
+			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
+			Ux[4][j*Nx+1]=habc(Ux,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
+			Uy[4][j*Nx+1]=habc(Uy,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
 
-			double Uxbdrleft=0;
-			#pragma acc loop reduction(+:Uxbdrleft)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=left_sstep[k];
-				Uxbdrleft+=-Ux[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
-			}
-				Ux[4][j*Nx+1]=Uxbdrleft;
-
-			double Uybdrleft=0;
-			#pragma acc loop reduction(+:Uybdrleft)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=left_sstep[k];
-				Uybdrleft+=-Uy[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
-			}
-				Uy[4][j*Nx+1]=Uybdrleft;
-
-			double Ubdrright=0;
-			#pragma acc loop reduction(+:Ubdrright)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=right_sstep[k];
-				Ubdrright+=-U[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
-			}
-				U[4][(j+1)*Nx-2]=Ubdrright;			
-
-			double Uxbdrright=0;
-			#pragma acc loop reduction(+:Uxbdrright)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=right_sstep[k];
-				Uxbdrright+=-Ux[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
-			}
-				Ux[4][(j+1)*Nx-2]=Uxbdrright;			
-
-			double Uybdrright=0;
-			#pragma acc loop reduction(+:Uybdrright)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=right_sstep[k];
-				Uybdrright+=-Uy[4+tshift][(j-1)*Nx-2+pos]*right_cfabc[j-1][k];
-			}
-				Uy[4][(j+1)*Nx-2]=Uybdrright;			
+			U[4][(j+1)*Nx-2]=habc(U,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-2);
+			Ux[4][(j+1)*Nx-2]=habc(Ux,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-2);	
+			Uy[4][(j+1)*Nx-2]=habc(Uy,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-2);			
 
 		}
 		
 		#pragma acc parallel loop
 		for (int j=1;j<Nx-1;j++)
 		{
-			double Ubdrbottom=0;
-			#pragma acc loop reduction(+:Ubdrbottom)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=bottom_sstep[k];
-				Ubdrbottom+=-U[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
-			}
-				U[4][Ny*Nx-Nx+j]=Ubdrbottom;			
-			
-			double Uxbdrbottom=0;
-			#pragma acc loop reduction(+:Uxbdrbottom)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=bottom_sstep[k];
-				Uxbdrbottom+=-Ux[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
-			}
-				Ux[4][Ny*Nx-Nx+j]=Uxbdrbottom;
-
-			double Uybdrbottom=0;
-			#pragma acc loop reduction(+:Uybdrbottom)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=bottom_sstep[k];
-				Uybdrbottom+=-Uy[4+tshift][Ny*Nx-Nx+j+pos]*bottom_cfabc[j-1][k];
-			}
-				Uy[4][Ny*Nx-Nx+j]=Uybdrbottom;
+			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
+			Ux[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
+			Uy[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
 		}
 		
 		#pragma acc parallel loop
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
+			#pragma acc kernels
+			{
 			U[0][pos]=U[1][pos];
 			U[1][pos]=U[2][pos];
 			U[2][pos]=U[3][pos];
@@ -275,6 +209,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[1][pos]=Uy[2][pos];
 			Uy[2][pos]=Uy[3][pos];
 			Uy[3][pos]=Uy[4][pos];
+			}
 		}
 		
 		#pragma acc parallel loop
