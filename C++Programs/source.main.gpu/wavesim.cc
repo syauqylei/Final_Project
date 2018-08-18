@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <accelmath.h>
 #include "arrayman.h"
+#include "hider.h"
 #include "abcon.h"
 #include "openacc.h"
 
@@ -115,13 +116,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
-			UD2xD2y=(U[3][pos+1]+U[3][pos-1]+U[3][pos+Nx]+U[3][pos-Nx]-4*U[3][pos])/h/h;
-			D4x=-12.0/h/h/h/h*(U[3][pos+1]-2.0*U[3][pos]+U[3][pos-1])+(Ux[3][pos+1]-Ux[3][pos-1])*6.0/h/h/h;
-			D4y=-12.0/h/h/h/h*(U[3][pos+Nx]-2.0*U[3][pos]+U[3][pos-Nx])+6.0/h/h/h*(Uy[3][pos+Nx]-Uy[3][pos-Nx]);
-			D2x2y=1.0/h/h/h/h*(2.0*(U[3][pos+Nx]+U[3][pos+1]-2.0*U[3][pos]+U[3][pos-1]+U[3][pos-Nx])
-					- U[3][pos-Nx+1]-U[3][pos-Nx-1]-U[3][pos+Nx+1]-U[3][pos+Nx-1])
-					+1.0/2.0/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx+1]-Ux[3][pos-Nx-1]-Ux[3][pos+Nx-1]-2.0*Ux[3][pos+1]+2.0*Ux[3][pos-1])
-					+1.0/2.0/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos+Nx-1]-Uy[3][pos-Nx-1]-Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]+2.0*Uy[3][pos-Nx]);
+			UD2xD2y=d2xd2y(U[3],h,pos,Nx);
+			D4x=d4(U[3],Ux[3],h,pos,1);
+			D4y=d4(U[3],Uy[3],h,pos,Nx);
+			D2x2y=d2x2y(U[3],Ux[3],Uy[3],h,pos,Nx);
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
@@ -153,7 +151,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
 			UyD2xD2y=(Uy[3][pos+1]+Uy[3][pos-1]+Uy[3][pos+Nx]+Uy[3][pos-Nx]-4*Uy[3][pos])/h/h;
-			D4xy=6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
+			D4xy=-6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
 					+3.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]-Ux[3][pos+Nx-1]-Ux[3][pos-Nx+1]);
 			D5y=-90.0/h/h/h/h/h*(U[3][pos+Nx]-U[3][pos-Nx])+30.0/h/h/h/h*(Uy[3][pos+Nx]+4.0*Uy[3][pos]+Uy[3][pos-Nx]);
 			D2x3y=-3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
