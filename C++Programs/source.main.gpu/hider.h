@@ -23,6 +23,6 @@ extern double d4xy(double *U, double *Ux, double h, int pos, int Nx);
 extern double d3x2y(double *U, double *Ux, double h, int pos, int Nx);
 
 #pragma acc routine seq
-extern double d2x3y(double *U, double *Uy, double h, int pos, int Nx)
+extern double d2x3y(double *U, double *Uy, double h, int pos, int Nx);
 
 #endif
