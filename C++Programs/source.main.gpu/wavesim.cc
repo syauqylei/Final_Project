@@ -78,7 +78,9 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	double t;
 	
-	#pragma acc data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81]) copyout(u[0:nt][0:nx]) 
+	#pragma acc enter data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	
+	#pragma acc data copyout(u[0:nt][0:nx]) 
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -87,21 +89,21 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
 		//Top neumann boundary
-		#pragma acc parallel loop
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny])
 		for (int j=0;j<Nx;j++){
 			U[3][j]=U[3][j+2*Nx];
 			Ux[3][j]=Ux[3][j+2*Nx];
 			Uy[3][j]=Uy[3][j+2*Nx];
 				}
 		
-		#pragma acc kernels
+		#pragma acc kernels present(U[0:5][0:Nx*Ny])
 		{
 		int source_loc=stencil[srcloc];		
 		U[3][source_loc]=-5.76*freq*freq*(1-16.0*(0.6*freq*t-1)*(0.6*freq*t-1)) *exp(-8.0* (0.6*freq*t-1)*(0.6*freq*t-1));
 		}
 		
 		//Calculate Wavefield
-		#pragma acc parallel loop 
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -123,8 +125,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//calculate ABC higdon boundary
-		#pragma acc parallel loop
-		for (int j=1;j<Ny-1;j++)
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],left_sstep[0:81],right_sstep[0:81],tstep[0:81])
+		for (int j=1;j<Ny-1;j++) 
 		{	
 			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
 			Ux[4][j*Nx+1]=habc(Ux,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
@@ -136,7 +138,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		}
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],tstep[0:81],bottom_cfabc[0:nx][0:81],bottom_sstep[0:81],tstep[0:81])
 		for (int j=1;j<Nx-1;j++)
 		{
 			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
@@ -144,7 +146,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
 		}
 		
-		#pragma acc parallel loop
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny])
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
@@ -173,9 +175,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	}
 	
+	#pragma acc exit data delete(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny])
 	#pragma acc exit data delete(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	#pragma acc exit data delete(left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
-	#pragma acc exit data delete(vel[0:nx*ny])
+	#pragma acc exit data delete(vel[0:nx*ny],stencil[0:nx*ny])
+	
 	free_mat_mem(U); free_mat_mem(Ux); free_mat_mem(Uy);
 	free_mat_mem(left_cfabc); free_mat_mem(right_cfabc); free_mat_mem(bottom_cfabc);
 	delete [] left_sstep; delete [] right_sstep; delete [] bottom_sstep; delete [] tstep;
