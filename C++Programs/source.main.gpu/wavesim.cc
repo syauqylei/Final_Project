@@ -4,6 +4,7 @@
 #include "arrayman.h"
 #include "hider.h"
 #include "abcon.h"
+#include "openacc.h"
 
 double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
 	int nt=int(T/dt);
@@ -152,7 +153,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D4xy=d4xy(U[3],Ux[3],h,pos,Nx);
 			D5y=d5(U[3],Uy[3],h,pos,Nx);
 			D2x3y=d2x3y(U[3],Uy[3],h,pos,Nx);
-
+					
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
 		
