@@ -13,12 +13,13 @@ double qt(double bta,double cfv){
 	return rslt;
 	}
 
+#pragma acc routine seq
 void gen_sstep(int *s_step,int pole){
 	int itr[3]={3,9,27};
 	s_step[0]=0;
 	s_step[1]=pole*1;
 	s_step[2]=0;
-
+	
 	for (int i=0;i<3;i++){
 		for (int j=0; j<2;j++){
 			for (int k=0; k<itr[i];k++){
@@ -28,6 +29,8 @@ void gen_sstep(int *s_step,int pole){
 		}
 	}
 
+
+#pragma acc routine seq
 void gen_tstep(int *t_step){
 	int itr[3]={3,9,27};
 	t_step[0]=0;
@@ -43,6 +46,7 @@ void gen_tstep(int *t_step){
 		}
 	}
 
+#pragma acc routine seq
 void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 	double cfl=c*dt/h;
 	double abc_eq[12];
@@ -67,3 +71,18 @@ void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 		}
 	cfabc[0]=0;
 	}
+
+
+#pragma acc routine vector
+double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos)
+{
+	double Ubdr=0;
+	#pragma acc loop reduction(+:Ubdr)
+	for (int k=0;k<81;k++)
+	{
+		int tshift=tstep[k];
+		int sshift=sstep[k];
+		Ubdr+=-U[4+tshift][pos+sshift]*cfabc[k];
+	}
+	return Ubdr;
+}

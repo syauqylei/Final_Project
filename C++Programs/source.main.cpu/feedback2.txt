@@ -1,116 +1,83 @@
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel main.cc
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel  wavesim.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel main.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel  wavesim.cc
 wvenacd(double *, int, int, int, double, double, double, double):
-     33, Generating copyin(Uxo[:Ny*Nx],Uxp[:Ny*Nx],Uym[:Ny*Nx],Uyo[:Ny*Nx],Uyp[:Ny*Nx],Uo[:Ny*Nx],Up[:Ny*Nx],Uxm[:Ny*Nx],Um[:Ny*Nx])
-     37, Loop is parallelizable
+     14, Generating enter data copyin(vel[:nx*ny])
+     17, Generating copyout(U[:5][:Ny*Nx],Uy[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
+     21, Loop is parallelizable
+     23, Loop is parallelizable
          Accelerator kernel generated
          Generating Tesla code
-         37, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     58, Generating copyin(stencil[:nx*ny])
-     60, Loop carried dependence of stencil-> prevents parallelization
-         Loop carried backward dependence of stencil-> prevents vectorization
-     61, Loop is parallelizable
+         21, #pragma acc loop gang, vector(4) /* blockIdx.y threadIdx.y */
+         23, #pragma acc loop gang, vector(32) /* blockIdx.x threadIdx.x */
+     40, Generating enter data create(stencil[:nx*ny])
+     44, Unrolled inner loop 4 times
+     51, Generating update device(stencil[:nx*ny])
+     58, Generating enter data create(tstep[:81],right_sstep[:81],left_sstep[:81],bottom_sstep[:81])
+     66, Generating update device(right_sstep[:81],tstep[:81],left_sstep[:81],bottom_sstep[:81])
+     68, Generating enter data create(right_cfabc[:ny][:81],left_cfabc[:ny][:81],bottom_cfabc[:nx][:81])
+     85, Generating update device(right_cfabc[:ny][:81],left_cfabc[:ny][:81],bottom_cfabc[:nx][:81])
+         Generating copyin(U[:5][:Ny*Nx],Ux[:5][:Ny*Nx])
+         Generating present(tstep[:81],right_sstep[:81],vel[:nx*ny])
+         Generating copyout(u[:nt][:nx])
+         Generating present(bottom_sstep[:81],left_sstep[:81])
+         Generating copyin(Uy[:5][:Ny*Nx])
+         Generating present(left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81],stencil[:nx*ny])
+     92, Accelerator kernel generated
+         Generating Tesla code
+         96, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    103, Accelerator scalar kernel generated
          Accelerator kernel generated
          Generating Tesla code
-         60, #pragma acc loop seq
-         61, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     94, Generating copyin(left_cfabc[:ny][:81],right_cfabc[:ny][:81],bottom_cfabc[:nx][:81],tstep[:81],right_sstep[:81],bottom_sstep[:81],left_sstep[:81])
-    102, Accelerator kernel generated
+    106, Accelerator kernel generated
          Generating Tesla code
-        107, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    102, Generating implicit copyin(Uyo[Nx*2:nx+2],Uxo[Nx*2:nx+2])
-         Generating implicit copyout(Uyo[:nx+2],Uxo[:nx+2])
-         Generating implicit copyin(Uo[Nx*2:nx+2])
-         Generating implicit copyout(Uo[:nx+2])
-    111, FMA (fused multiply-add) instruction(s) generated
-    115, Accelerator kernel generated
+        110, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    126, Accelerator kernel generated
          Generating Tesla code
-        119, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    115, Generating implicit copyin(Uo[:],Uxo[:])
-         Generating implicit copyout(Up[:])
-         Generating implicit copyin(Um[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:])
-    134, Accelerator kernel generated
+        129, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    143, Accelerator kernel generated
          Generating Tesla code
-        137, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    134, Generating implicit copyin(Uxo[:],Uo[:])
-         Generating implicit copyout(Uxp[:])
-         Generating implicit copyin(Uxm[:],vel[:nx*ny],stencil[:nx*ny],Uyo[:])
-    151, Accelerator kernel generated
+        146, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    163, Accelerator kernel generated
          Generating Tesla code
-        154, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    151, Generating implicit copyin(Uyo[:],Uxo[:],Uo[:],Uym[:],vel[:nx*ny],stencil[:nx*ny])
-         Generating implicit copyout(Uyp[:])
-    175, Generating implicit copyin(Up[:Ny*Nx],Uxp[:Ny*Nx])
-         Generating copyin(U[:5][:ny*Nx],Ux[:5][:ny*Nx],Uy[:5][:ny*Nx])
-         Accelerator kernel generated
-         Generating Tesla code
-        177, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    175, Generating implicit copyin(Uyp[:Ny*Nx],Uyo[:Ny*Nx],Uym[:Ny*Nx])
-         Generating present(Uy[:5][:ny*Nx])
-         Generating implicit copyin(Uxo[:Ny*Nx],Uxm[:Ny*Nx])
-         Generating present(Ux[:5][:ny*Nx])
-         Generating implicit copyin(Uo[:Ny*Nx],Um[:Ny*Nx])
-         Generating present(U[:5][:ny*Nx])
-    196, Generating present(left_cfabc[:ny][:81],right_cfabc[:ny][:81],tstep[:81],right_sstep[:81])
-         Generating implicit copyout(Uyp[:])
-         Generating present(left_sstep[:81])
-         Accelerator kernel generated
-         Generating Tesla code
-        201, #pragma acc loop gang /* blockIdx.x */
-        205, #pragma acc loop vector(128) /* threadIdx.x */
+        167, #pragma acc loop gang /* blockIdx.x */
+        171, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrleft)
-        215, #pragma acc loop vector(128) /* threadIdx.x */
+        181, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrleft)
-        225, #pragma acc loop vector(128) /* threadIdx.x */
+        191, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrleft)
-        235, #pragma acc loop vector(128) /* threadIdx.x */
+        201, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrright)
-        245, #pragma acc loop vector(128) /* threadIdx.x */
+        211, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrright)
-        255, #pragma acc loop vector(128) /* threadIdx.x */
+        221, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrright)
-    196, Generating implicit copyout(Up[:],Uxp[:])
-    205, Loop is parallelizable
-    215, Loop is parallelizable
-    225, Loop is parallelizable
-    235, Loop is parallelizable
-    245, Loop is parallelizable
-    255, Loop is parallelizable
-    263, Generating present(bottom_cfabc[:nx][:81],tstep[:81],bottom_sstep[:81])
-         Generating implicit copyout(Uyp[(Ny*Nx)-nx-1:nx])
-         Accelerator kernel generated
+    171, Loop is parallelizable
+    181, Loop is parallelizable
+    191, Loop is parallelizable
+    201, Loop is parallelizable
+    211, Loop is parallelizable
+    221, Loop is parallelizable
+    229, Accelerator kernel generated
          Generating Tesla code
-        266, #pragma acc loop gang /* blockIdx.x */
-        270, #pragma acc loop vector(128) /* threadIdx.x */
+        232, #pragma acc loop gang /* blockIdx.x */
+        236, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Ubdrbottom)
-        280, #pragma acc loop vector(128) /* threadIdx.x */
+        246, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uxbdrbottom)
-        290, #pragma acc loop vector(128) /* threadIdx.x */
+        256, #pragma acc loop vector(128) /* threadIdx.x */
              Generating reduction(+:Uybdrbottom)
-    263, Generating implicit copyout(Uxp[(Ny*Nx)-nx-1:nx],Up[(Ny*Nx)-nx-1:nx])
-    270, Loop is parallelizable
-    280, Loop is parallelizable
-    290, Loop is parallelizable
-    298, Accelerator kernel generated
+    236, Loop is parallelizable
+    246, Loop is parallelizable
+    256, Loop is parallelizable
+    263, Accelerator kernel generated
          Generating Tesla code
-        301, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    298, Generating implicit copy(Uyo[:])
-         Generating implicit copyin(Uxp[:])
-         Generating implicit copyout(Uym[:])
-         Generating implicit copy(Uxo[:])
-         Generating implicit copyin(Up[:])
-         Generating implicit copyout(Uxm[:])
-         Generating implicit copy(Uo[:])
-         Generating implicit copyout(Um[:])
-         Generating implicit copyin(stencil[:nx*ny],Uyp[:])
-    310, Generating implicit copyout(u[i+1][:nx])
-         Generating implicit copyin(stencil[:nx],Up[:])
-    312, Loop is parallelizable
-         Accelerator kernel generated
+        266, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    283, Accelerator kernel generated
          Generating Tesla code
-        312, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-    319, Generating exit data delete(Uy[:1][:1],Uyo[:1],Uym[:1],Uxo[:1],Ux[:1][:1],Uxm[:1],U[:1][:1],Um[:1],Uo[:1],Uyp[:1],left_sstep[:1],bottom_sstep[:1],tstep[:1],right_sstep[:1],bottom_cfabc[:1][:1],right_cfabc[:1][:1],left_cfabc[:1][:1],Uxp[:1],Up[:1])
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel arrayman.cc
+        286, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+    296, Generating exit data delete(left_sstep[:81],bottom_sstep[:81],right_sstep[:81],bottom_cfabc[:nx][:81],right_cfabc[:ny][:81],left_cfabc[:ny][:81],vel[:nx*ny],tstep[:81])
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel arrayman.cc
 pairsortd(int *, double *, int):
       8, Loop unrolled 8 times
      18, Loop unrolled 16 times
@@ -336,7 +303,7 @@ void std::__unguarded_linear_insert<std::pair<int, int> *, __gnu_cxx::__ops::_Va
                                                   37, include "cfloat"
                                                        42, include "float.h"
                                                             56, include "stdc++.h"
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel abcon.cc
+pgc++ -acc -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel abcon.cc
 gen_sstep(int *, int):
      23, Outer loop unrolled 2 times (completely unrolled)
 gen_tstep(int *):
@@ -344,8 +311,8 @@ gen_tstep(int *):
 gen_cfabc(double *, double, double, double, double *):
      60, Outer loop unrolled 2 times (completely unrolled)
      63, Loop unrolled 8 times
-pgc++ -std=c++11 -c -pg -acc -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel rnw.cc
+pgc++ -std=c++11 -c -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel rnw.cc
 w_dat(const std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>> &, double *, double **, double, double, int, int, int, int, double, double, double):
           48, FMA (fused multiply-add) instruction(s) generated
          133, FMA (fused multiply-add) instruction(s) generated
-pgc++ -std=c++11 -pg *.o -o ./wve_nacdgpu -fast -Minfo=opt  -ta=tesla:cc60,managed -Minfo=accel
+pgc++ -std=c++11 *.o -o ./wve_nacdgpu -fast -Minfo=opt  -ta=tesla:cc60 -Minfo=accel
