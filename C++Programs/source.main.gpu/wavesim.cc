@@ -70,21 +70,18 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	#pragma acc enter data create(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
 	
-	#pragma acc kernels
+	#pragma acc kernels copyin(vel[0:nx*ny]) present(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81])
 	for (int i=0;i<ny;i++)
-		{	
+		{
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
 		gen_cfabc(right_cfabc[i],vel[(i+1)*nx-1],dt,h,beta);
 		}
 
-	#pragma acc kernels
+	#pragma acc kernels copyin(vel[0:nx*ny]) present(bottom_cfabc[0:nx][0:81])
 	for (int i=0;i<nx;i++)
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
-	
-	#pragma acc update device(left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81])
-	
 	double t;
 	#pragma acc data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny]) copyout(u[0:nt][0:nx]) present(stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	for (int i=0; i<nt-1;i++)
