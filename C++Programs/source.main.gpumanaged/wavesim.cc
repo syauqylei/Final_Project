@@ -39,6 +39,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	//create stencil
 	int *__restrict__ stencil= new int[nx*ny];
 	
+	#pragma acc parallel loop
 	for (int i=1;i<Ny-1;i++){
 		for (int j=1;j<Nx-1;j++){
 			stencil[(i-1)*nx+j-1]=i*Nx+j;
@@ -62,12 +63,14 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	double **__restrict__ right_cfabc=alloc_mat(ny,81);
 	double **__restrict__ bottom_cfabc=alloc_mat(nx,81);
 	
+	#pragma acc parallel loop
 	for (int i=0;i<ny;i++)
 		{
 		gen_cfabc(left_cfabc[i],vel[i*nx],dt,h,beta);
 		gen_cfabc(right_cfabc[i],vel[(i+1)*nx-1],dt,h,beta);
 		}
 
+	#pragma acc parallel loop
 	for (int i=0;i<nx;i++)
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
@@ -95,6 +98,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 		
 		//Calculate Wavefield
+		#pragma acc parallel loop
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
@@ -116,6 +120,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			}
 		
 		//calculate ABC higdon boundary
+		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
 		{	
 			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
@@ -128,6 +133,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 
 		}
 		
+		#pragma acc parallel loop
 		for (int j=1;j<Nx-1;j++)
 		{
 			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
@@ -135,6 +141,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
 		}
 		
+		#pragma acc parallel loop
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
@@ -155,6 +162,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			
 		}
 		
+		#pragma acc parallel loop
 		for (int j=0;j<nx;j++)
 		{
 			int pos=stencil[j];
