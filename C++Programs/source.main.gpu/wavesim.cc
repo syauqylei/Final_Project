@@ -13,7 +13,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	
 	#pragma acc enter data copyin(vel[0:nx*ny])
 	//Alloc array to store wavefield
-	double **__restrict__ u=alloc_mat(nt,nx*ny);
+	double **__restrict__ u=alloc_mat(nt,nx);
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
