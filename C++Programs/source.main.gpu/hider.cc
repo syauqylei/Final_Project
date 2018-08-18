@@ -13,7 +13,7 @@ double d4(double *U, double *U_, double h, int pos,int dom)
 #pragma acc routine seq
 double d5(double *U, double *U_, double h, int pos,int dom)
 {
-	return -90.0/h/h/h/h/h*(U[pos+dom]-U[pos-dom])+30.0/h/h/h/h*(U_[pos+dom]+4.0*U_[pos]+Uy[pos-dom]);
+	return -90.0/h/h/h/h/h*(U[pos+dom]-U[pos-dom])+30.0/h/h/h/h*(U_[pos+dom]+4.0*U_[pos]+U_[pos-dom]);
 }
 
 #pragma acc routine seq
