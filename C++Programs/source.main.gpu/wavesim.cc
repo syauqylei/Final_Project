@@ -161,7 +161,15 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
 		{	
-			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
+			double Ubdrleft=0;
+			#pragma acc loop reduction(+:Ubdrleft)
+			for (int k=0;k<81;k++)
+			{
+				int tshift=tstep[k];
+				int pos=left_sstep[k];
+				Ubdrleft+=-U[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
+			}
+				U[4][j*Nx+1]=Ubdrleft;
 
 			double Uxbdrleft=0;
 			#pragma acc loop reduction(+:Uxbdrleft)
