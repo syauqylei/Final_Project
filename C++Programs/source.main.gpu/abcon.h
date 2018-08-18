@@ -9,4 +9,8 @@ extern void gen_tstep(int *t_step);
 
 #pragma acc routine seq
 extern void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta);
+
+#pragma acc routine vector
+extern double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos);
+
 #endif

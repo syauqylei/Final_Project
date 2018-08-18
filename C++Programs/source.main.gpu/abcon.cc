@@ -70,3 +70,17 @@ void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 		}
 	cfabc[0]=0;
 	}
+
+#pragma acc routine vector
+double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos)
+{
+	double Ubdr=0;
+	#pragma acc loop reduction(+:Ubdrleft)
+	for (int k=0;k<81;k++)
+	{
+		int tshift=tstep[k];
+		int sshift=sstep[k];
+		Ubdr+=-U[4+tshift][pos+sshift]*cfabc[k];
+	}
+	return Ubdr;
+}

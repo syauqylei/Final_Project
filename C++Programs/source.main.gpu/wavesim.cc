@@ -131,12 +131,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
-			UxD2xD2y=(Ux[3][pos+1]+Ux[3][pos-1]+Ux[3][pos+Nx]+Ux[3][pos-Nx]-4*Ux[3][pos])/h/h;
-			D5x=-90.0/h/h/h/h/h*(U[3][pos+1]-U[3][pos-1])+30.0/h/h/h/h*(Ux[3][pos+1]+4.0*Ux[3][pos]+Ux[3][pos-1]);
-			Dx4y=-6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]-U[3][pos-1+Nx]+U[3][pos+1-Nx]+2.0*U[3][pos-1]-2.0*U[3][pos+1])
-					+3.0/h/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos-Nx-1]-Uy[3][pos+Nx-1]-Uy[3][pos-Nx+1]);
-			D3x2y=3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos+1-Nx]-U[3][pos-1+Nx]+2.0*U[3][pos-1]-2.0*U[3][pos+1])
-					+3.0/2.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]+Ux[3][pos+Nx-1]+Ux[3][pos-Nx+1]-2.0*Ux[3][pos+1]-2.0*Ux[3][pos-1]);
+			
+			UxD2xD2y=d2xd2y(Ux[3],h,pos,Nx);
+			D5x=d5(U[3],Ux[3],h,pos,1);
+			Dx4y=dx4y(U[3],Uy[3],h,pos,Nx);
+			D3x2y=d3x2y(U[3],Ux[3],h,pos,Nx);
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
 		
@@ -150,13 +149,11 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
-			UyD2xD2y=(Uy[3][pos+1]+Uy[3][pos-1]+Uy[3][pos+Nx]+Uy[3][pos-Nx]-4*Uy[3][pos])/h/h;
-			D4xy=-6.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
-					+3.0/h/h/h/h*(Ux[3][pos+Nx+1]+Ux[3][pos-Nx-1]-Ux[3][pos+Nx-1]-Ux[3][pos-Nx+1]);
-			D5y=-90.0/h/h/h/h/h*(U[3][pos+Nx]-U[3][pos-Nx])+30.0/h/h/h/h*(Uy[3][pos+Nx]+4.0*Uy[3][pos]+Uy[3][pos-Nx]);
-			D2x3y=-3.0/2.0/h/h/h/h/h*(U[3][pos+Nx+1]-U[3][pos-1-Nx]+U[3][pos-1+Nx]-U[3][pos+1-Nx]+2.0*U[3][pos-Nx]-2.0*U[3][pos+Nx])
-					+3.0/2.0/h/h/h/h*(Uy[3][pos+Nx+1]+Uy[3][pos-Nx-1]+Uy[3][pos+Nx-1]+Uy[3][pos-Nx+1]-2.0*Uy[3][pos+Nx]-2.0*Uy[3][pos-Nx]);
-					
+			UyD2xD2y=d2xd2y(Uy[3],h,pos,Nx);
+			D4xy=d4xy(U[3],Ux[3],h,pos,Nx);
+			D5y=d5(U[3],Uy[3],h,pos,Nx);
+			D2x3y=d2x3y(U[3],Uy[3],h,pos,Nx);
+
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
 		
@@ -164,15 +161,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		#pragma acc parallel loop
 		for (int j=1;j<Ny-1;j++)
 		{	
-			double Ubdrleft=0;
-			#pragma acc loop reduction(+:Ubdrleft)
-			for (int k=0;k<81;k++)
-			{
-				int tshift=tstep[k];
-				int pos=left_sstep[k];
-				Ubdrleft+=-U[4+tshift][j*Nx+1+pos]*left_cfabc[j-1][k];
-			}
-				U[4][j*Nx+1]=Ubdrleft;
+			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
 
 			double Uxbdrleft=0;
 			#pragma acc loop reduction(+:Uxbdrleft)
