@@ -112,8 +112,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			int pos=stencil[j];
 			double cf1,cf2,cf3;
 			double D4x,D4y,D2x2y,UD2xD2y;
-			#pragma acc parallel
-			{
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -122,7 +120,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D4x=d4(U[3],Ux[3],h,pos,1);
 			D4y=d4(U[3],Uy[3],h,pos,Nx);
 			D2x2y=d2x2y(U[3],Ux[3],Uy[3],h,pos,Nx);
-			}
+			
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*UD2xD2y-cf2*(D4x+D4y)+cf3*D2x2y;
 		}
 		
@@ -132,8 +130,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			double cf1,cf2,cf3;
 			double D5x,Dx4y,D3x2y,UxD2xD2y;
 			
-			#pragma acc parallel
-			{
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -142,7 +138,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D5x=d5(U[3],Ux[3],h,pos,1);
 			Dx4y=dx4y(U[3],Uy[3],h,pos,Nx);
 			D3x2y=d3x2y(U[3],Ux[3],h,pos,Nx);
-			}
 			
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*UxD2xD2y-cf2*(D5x+Dx4y)+cf3*D3x2y;
 			}
@@ -152,8 +147,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			int pos=stencil[j];
 			double D4xy,D5y,D2x3y,UyD2xD2y;
 			double cf1,cf2,cf3;
-			#pragma acc parallel
-			{
+			
 			cf1=vel[j]*vel[j]*dt*dt;
 			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
 			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
@@ -162,7 +156,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			D4xy=d4xy(U[3],Ux[3],h,pos,Nx);
 			D5y=d5(U[3],Uy[3],h,pos,Nx);
 			D2x3y=d2x3y(U[3],Uy[3],h,pos,Nx);
-			}		
 			
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*UyD2xD2y-cf2*(D4xy+D5y)+cf3*D2x3y;
 			}
@@ -193,8 +186,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		for (int j=0;j<nx*ny;j++)	
 		{
 			int pos=stencil[j];
-			#pragma acc parallel
-			{
+			
 			U[0][pos]=U[1][pos];
 			U[1][pos]=U[2][pos];
 			U[2][pos]=U[3][pos];
@@ -209,7 +201,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[1][pos]=Uy[2][pos];
 			Uy[2][pos]=Uy[3][pos];
 			Uy[3][pos]=Uy[4][pos];
-			}
+			
 		}
 		
 		#pragma acc parallel loop
