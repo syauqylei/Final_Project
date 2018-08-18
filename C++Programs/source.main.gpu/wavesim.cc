@@ -119,30 +119,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*d2xd2y(U[3],h,pos,Nx)
 						-cf2*(d4(U[3],Ux[3],h,pos,1)+d4(U[3],Uy[3],h,pos,Nx))
 						+cf3*d2x2y(U[3],Ux[3],Uy[3],h,pos,Nx);
-		}
-		
-		#pragma acc parallel loop
-		for(int j=0;j<nx*ny;j++){
-			int pos=stencil[j];
-			double cf1,cf2,cf3;
-			
-			cf1=vel[j]*vel[j]*dt*dt;
-			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
-			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
 			Ux[4][pos]=2.0*Ux[3][pos]-Ux[2][pos]+cf1*d2xd2y(Ux[3],h,pos,Nx)
 						-cf2*(d5(U[3],Ux[3],h,pos,1)+dx4y(U[3],Uy[3],h,pos,Nx))
 						+cf3*d3x2y(U[3],Ux[3],h,pos,Nx);
-			}
-		
-		#pragma acc parallel loop
-		for(int j=0;j<nx*ny;j++){
-			int pos=stencil[j];
-			double cf1,cf2,cf3;
-			
-			cf1=vel[j]*vel[j]*dt*dt;
-			cf2=(vel[j]*vel[j]*dt*dt*h*h-vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/12.0;
-			cf3=(vel[j]*vel[j]*vel[j]*vel[j]*dt*dt*dt*dt)/6.0;
 			
 			Uy[4][pos]=2.0*Uy[3][pos]-Uy[2][pos]+cf1*d2xd2y(Uy[3],h,pos,Nx)
 						-cf2*(d4xy(U[3],Ux[3],h,pos,Nx)+d5(U[3],Uy[3],h,pos,Nx))
