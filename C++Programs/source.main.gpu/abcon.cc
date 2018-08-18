@@ -13,6 +13,7 @@ double qt(double bta,double cfv){
 	return rslt;
 	}
 
+#pragma acc routine seq
 void gen_sstep(int *s_step,int pole){
 	int itr[3]={3,9,27};
 	s_step[0]=0;
@@ -28,6 +29,8 @@ void gen_sstep(int *s_step,int pole){
 		}
 	}
 
+
+#pragma acc routine seq
 void gen_tstep(int *t_step){
 	int itr[3]={3,9,27};
 	t_step[0]=0;
@@ -43,6 +46,7 @@ void gen_tstep(int *t_step){
 		}
 	}
 
+#pragma acc routine seq
 void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 	double cfl=c*dt/h;
 	double abc_eq[12];
@@ -68,6 +72,8 @@ void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 	cfabc[0]=0;
 	}
 
+
+#pragma acc routine gang
 double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos)
 {
 	double Ubdr=0;
