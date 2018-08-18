@@ -75,7 +75,7 @@ void gen_cfabc(double *cfabc,double c,double dt,double h,double *beta){
 double habc(double **U, double *cfabc, int *tstep, int *sstep, int pos)
 {
 	double Ubdr=0;
-	#pragma acc loop reduction(+:Ubdrleft)
+	#pragma acc loop reduction(+:Ubdr)
 	for (int k=0;k<81;k++)
 	{
 		int tshift=tstep[k];
