@@ -3,7 +3,7 @@
 #include <accelmath.h>
 #include "arrayman.h"
 #include "hider.h"
-#include "openacc.h"
+#include "abcon.h"
 
 double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
 	int nt=int(T/dt);
