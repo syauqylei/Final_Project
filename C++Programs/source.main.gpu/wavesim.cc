@@ -78,10 +78,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	double t;
 	
-	for (int i=0;i<ngpus;i++)
-	{
 	#pragma acc enter data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
-	}
 	
 	#pragma acc data copyout(u[0:nt][0:nx]) 
 	for (int i=0; i<nt-1;i++)
