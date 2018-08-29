@@ -11,8 +11,20 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int Nx=nx+2;
 	int Ny=ny+2;
 	
+	int ngpus=acc_get_num_devices(acc_device_nvidia);
+	
+	int topDomain_chunk= Nx*(Ny/ngpus);
+	int botDomain_chunk= Nx*(Ny-Ny/ngpus);
+	
+	int dom_start_idx[2];
+	int dom_end_idx[2];
+	
+	dom_start_idx[0] = 0; dom_start_idx[1] = topDomain_chunk;
+	dom_end_idx[0] = topDomain_chunk; dom_end_idx[1] = topDomain_chunk + botDomain_chunk;
+	
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx);
+	
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Uy=alloc_mat(5,Nx*Ny);
@@ -28,7 +40,6 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			Uy[i][j]=0.0;
 		}
 	}
-	
 	
 	//create angle factor for abc higdon
 	double *__restrict__ beta= new double[4];
@@ -78,7 +89,10 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 	double t;
 	
+	for (int i=0;i<ngpus;i++)
+	{
 	#pragma acc enter data copyin(U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
+	}
 	
 	#pragma acc data copyout(u[0:nt][0:nx]) 
 	for (int i=0; i<nt-1;i++)
