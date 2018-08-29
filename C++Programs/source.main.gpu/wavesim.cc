@@ -11,19 +11,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 	int Nx=nx+2;
 	int Ny=ny+2;
 	
-	int ngpus=acc_get_num_devices(acc_device_nvidia);
-	
-	int topDomain_chunk= Nx*(Ny/ngpus);
-	int botDomain_chunk= Nx*(Ny-Ny/ngpus);
-	
-	int dom_start_idx[2];
-	int dom_end_idx[2];
-	
-	dom_start_idx[0] = 0; dom_start_idx[1] = topDomain_chunk;
-	dom_end_idx[0] = topDomain_chunk; dom_end_idx[1] = topDomain_chunk + botDomain_chunk;
-	
 	//Alloc array to store wavefield
-	double **__restrict__ u=alloc_mat(nt,nx);
+	double **__restrict__ u=alloc_mat(nt,nx*ny);
 	
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	double **__restrict__ Ux=alloc_mat(5,Nx*Ny);
@@ -182,7 +171,7 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 		}
 		
 		#pragma acc parallel loop
-		for (int j=0;j<nx;j++)
+		for (int j=0;j<nx*ny;j++)
 		{
 			int pos=stencil[j];
 			u[i+1][j]=U[4][pos];
