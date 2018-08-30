@@ -390,7 +390,7 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			for(int k=0;k<nx;k++)
 			{
 				int id=idx(j,k,nx);
-				I[j][k]+=Ug[nt-1-i][id]*dg[i][id];
+				I[j][k]+=ug[nt-1-i][id]*dg[i][id];
 			}
 		}
 	}
