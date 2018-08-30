@@ -257,7 +257,6 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		{
 		gen_cfabc(bottom_cfabc[i],vel[nx*ny-nx+i],dt,h,beta);
 		}
-	double t;
 	
 	#pragma acc enter data copyin(rec[0:nt][0:nx*ny],U[0:5][0:Nx*Ny],Ux[0:5][0:Nx*Ny],Uy[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	
