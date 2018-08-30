@@ -187,7 +187,7 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 	delete [] left_sstep; delete [] right_sstep; delete [] bottom_sstep; delete [] tstep;
 	return u;}
 
-double **ug_wve(double **rec,double *vel, int nx, int ny,double h, double dt,double T){
+double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,double T){
 	int nt=int(T/dt);
 	int Nx=nx+2;
 	int Ny=ny+2;
@@ -372,6 +372,8 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h, double dt,dou
 double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 {
 	double **__restrict__ I = alloc_mat(ny,nx);
+	
+	#pragma acc kernels copyin(I[0:ny][0:nx])
 	for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
@@ -380,6 +382,7 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			}
 		}
 	
+	#pragma acc kernels copyin(ug[0:nt][0:nx*ny],dg[0:nt][0:nx*ny]) copyout(I[0:ny][0:nx])
 	for (int i=0;i<nt;i++)
 	{
 		for(int j=0;j<ny;j++)
