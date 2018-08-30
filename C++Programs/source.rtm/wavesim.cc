@@ -398,8 +398,7 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 		{
 			for(int k=0;k<nx;k++)
 			{
-				int id=idx(j,k,nx);
-				I[j][k]=Ia[j][k]/Ib[id];
+				I[j][k]=Ia[j][k]/Ib[j][k];
 			}
 		}
 

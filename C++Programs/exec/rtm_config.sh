@@ -6,5 +6,5 @@ do
 	par2="./marm.txt"
 	par3="./setfile$i.txt"
 	par4="./rec$i.txt"
-	./Rtm_nacd $par1 $par2 $par3 $par4
+	./Rtm_nacdo $par1 $par2 $par3 $par4
 done
