@@ -25,8 +25,7 @@ int main(int argc, char *argv[]){
 	double **record=alloc_mat(nt,nx);
 	
 	rec_2d(record,rec,nx,nt);
-	
-	int nt=int(T/dt);
+
 	double *Velocity=&vel[0];
 	double **u;
 	double **d;
