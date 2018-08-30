@@ -258,17 +258,16 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		
 		//calculate ABC higdon boundary
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],left_sstep[0:81],right_sstep[0:81],tstep[0:81])
-		for (int j=1;j<Ny-1;j++) 
+		for (int j=2;j<Ny-2;j++) 
 		{	
 			U[4][j*Nx+2]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+2);
-
 			U[4][(j+1)*Nx-3]=habc(U,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-3);			
 		}
 		
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],tstep[0:81],bottom_cfabc[0:nx][0:81],bottom_sstep[0:81],tstep[0:81])
-		for (int j=1;j<Nx-1;j++)
+		for (int j=2;j<Nx-2;j++)
 		{
-			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
+			U[4][Ny*Nx-2*Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-2*Nx+j);
 		}
 		
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],stencil[0:nx*ny])
