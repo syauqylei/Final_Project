@@ -1,6 +1,6 @@
 #ifndef RNW
 #define RNW
-void read_rec(const std::string& filename, std::vector <double>& rec)
+void read_rec(const std::string& filename, std::vector <double>& rec);
 void read_rec_pr(const std::string& filename, int &nx,int &nt,int &xsource,int &ysource, double &h,double &dt);
 void rec_2d(double **rec_out,std::vector <double>& rec, int nx,int nt);
 void read_vel(const std::string& filename, std::vector <double>& vel , int &nx,int &ny, int &nz, double &h);
