@@ -104,7 +104,7 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
-			double cf1,cf2,cf3;
+			double cf1;
 			cf1=vel[j]*vel[j]*dt*dt;
 			
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1/12.0*
@@ -164,7 +164,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 	
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	//create data on device
-	#pragma acc kernels copyout(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
+	#pragma acc kernels copyout(U[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
 		for (int j=0;j<Nx*Ny;j++)
@@ -249,7 +249,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny])
 		for (int j=0; j<nx*ny;j++){
 			int pos=stencil[j];
-			double cf1,cf2,cf3;
+			double cf1;
 			cf1=vel[j]*vel[j]*dt*dt;
 			
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1/12.0*
