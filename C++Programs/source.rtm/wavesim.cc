@@ -380,7 +380,7 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			}
 		}
 	
-	#pragma acc kernels copyin(ug[0:nt][0:nx*ny],dg[0:nt][0:nx*ny]) copyout(I[0:ny][0:nx])
+	#pragma acc kernels copyin(ug[0:nt][0:nx*ny],dg[0:nt][0:nx*ny]) copyout(I[0:ny][0:nx]) reduction(+:I)
 	for (int i=0;i<nt;i++)
 	{
 		for(int j=0;j<ny;j++)
