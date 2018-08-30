@@ -164,7 +164,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 	
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	//create data on device
-	#pragma acc kernels copyout(U[:5][:Nx*Ny],Ux[:5][:Nx*Ny],Uy[:5][:Nx*Ny])
+	#pragma acc kernels copyout(U[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
 	{
 		for (int j=0;j<Nx*Ny;j++)
