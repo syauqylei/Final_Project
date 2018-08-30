@@ -264,7 +264,6 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
-		t=dt*(i);
 		if((i)%(nt/10)==0){
 		std::cout<<std::fixed<<std::setprecision(1)<<"Calculating Wavefield ... "<<float(i)/float(nt)*100.0<<"%\n";}
 		
