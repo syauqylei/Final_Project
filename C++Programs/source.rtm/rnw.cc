@@ -133,7 +133,7 @@ void write_img_txt(const std::string& filename, double **U,int nx,int ny){
 	std::ofstream file;
 	file.open(fname);
 	
-	std::cout<<"Writing Wavefield ... "<<float(i)/float(nt)*100<<"%\n";}	
+	std::cout<<"Writing Wavefield ... \n";	
 	for(int i=0;i<ny;i++){
 		for(int k=0;k<nx;k++){
 				file<<std::fixed<<std::setprecision(3)<<U[i][k]<<"\t"; 
