@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
 		int end=std::clock();
 		
 		std::cout << "time: " << (end-start)/double(CLOCKS_PER_SEC)*1000 << std::endl;
-		write_img_txt(argv[1],I,nx,ny);
+		write_img_txt(argv[1],I,nx,ny,h);
 		}
 	free_mat_mem(u);
 	free_mat_mem(d);

@@ -127,7 +127,7 @@ void write_rec_txt(const std::string& filename, double **U,int xsource,int ysour
 	std::cout<<"Writing is done\n";
 	}
 
-void write_img_txt(const std::string& filename, double **U,int nx,int ny){
+void write_img_txt(const std::string& filename, double **U,int nx,int ny,double h){
 	std::string ext=".txt";
 	std::string fname=filename+ext;
 	std::ofstream file;
@@ -141,6 +141,14 @@ void write_img_txt(const std::string& filename, double **U,int nx,int ny){
 		file<<std::endl;
 	}
 	file.close();
+	std::string ext2="pr";
+	std::ofstream file2;
+	file2.open(filename+ext+ext2);
+	file2<<nx<<"\t"<<ny<<"\t"<<h;
+	file2<<std::endl;
+	
+	file2.close();
+	
 	std::cout<<"Writing is done\n";
 	}
 
