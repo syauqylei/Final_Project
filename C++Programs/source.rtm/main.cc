@@ -24,7 +24,8 @@ int main(int argc, char *argv[]){
 		int src_loc=srcloc[ns+i]*(nx)+srcloc[i];
 		std::cout<<"Calculating Wave solution with FD2 .... \n";
 		int start=std::clock();
-		u=wvenacd(Velocity,nx,ny,src_loc,freq,h,dt,T);
+		d=dg(Velocity,nx,ny,src_loc,freq,h,dt,T);
+		u=
 		int end=std::clock();
 		std::cout << "time: " << (end-start)/double(CLOCKS_PER_SEC)*1000 << std::endl;
 		write_rec_txt(argv[1], u,srcloc[i],srcloc[ns+i],h,dt, nx,ny,nt);
