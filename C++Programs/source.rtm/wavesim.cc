@@ -369,13 +369,16 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 
 double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 {
+	double **__restrict__ Ia = alloc_mat(ny,nx);
+	double **__restrict__ Ib = alloc_mat(ny,nx);
 	double **__restrict__ I = alloc_mat(ny,nx);
 	
 	for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
 			{
-				I[j][k]=0.00;
+				Ia[j][k]=0.00;
+				Ib[j][k]=0.00;
 			}
 		}
 	
@@ -386,10 +389,23 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			for(int k=0;k<nx;k++)
 			{
 				int id=idx(j,k,nx);
-				I[j][k]+=ug[nt-1-i][id]*dg[i][id];
+				Ia[j][k]+=ug[nt-1-i][id]*dg[i][id];
+				Ib[j][k]+=dg[i][id]*dg[i][id]+0.0000001;
 			}
 		}
 	}
+	for(int j=0;j<ny;j++)
+		{
+			for(int k=0;k<nx;k++)
+			{
+				int id=idx(j,k,nx);
+				I[j][k]=Ia[j][k]/Ib[id];
+			}
+		}
+
+	free_mat_mem(Ia);
+	free_mat_mem(Ib);
+
 	return I;
 }
 
