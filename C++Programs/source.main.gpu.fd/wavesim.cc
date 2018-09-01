@@ -107,8 +107,8 @@ double **wvenacd(double *vel, int nx, int ny,int srcloc, double freq,double h, d
 			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*(-60.0*U[3][pos]
 													+16.0*U[3][pos+1]+16.0*U[3][pos-1]
 													+16.0*U[3][pos+Nx]+16.0*U[3][pos-Nx]
-													+U[3][pos+2]+U[3][pos-2]
-													+U[3][pos+2*Nx]+U[3][pos-2*Nx]);
+													-U[3][pos+2]-U[3][pos-2]
+													-U[3][pos+2*Nx]-U[3][pos-2*Nx]);
 			}
 		
 		//calculate ABC higdon boundary
