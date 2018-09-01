@@ -241,7 +241,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		{
 		for(int j=2;j<Nx-2;j++)
 			{
-				U[3][Nx+j]=rec[nt-1-i][j-2];
+				U[3][2*Nx+j]=rec[nt-1-i][j-2];
 			}
 		}
 		
