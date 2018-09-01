@@ -126,3 +126,67 @@ void write_rec_txt(const std::string& filename, double **U,int xsource,int ysour
 	file2.close();
 	std::cout<<"Writing is done\n";
 	}
+
+void write_img_txt(const std::string& filename, double **U,int nx,int ny,double h){
+	std::string ext=".txt";
+	std::string fname=filename+ext;
+	std::ofstream file;
+	file.open(fname);
+	
+	std::cout<<"Writing Wavefield ... \n";	
+	for(int i=0;i<ny;i++){
+		for(int k=0;k<nx;k++){
+				file<<std::fixed<<std::setprecision(3)<<U[i][k]<<"\t"; 
+			}
+		file<<std::endl;
+	}
+	file.close();
+	std::string ext2="pr";
+	std::ofstream file2;
+	file2.open(filename+ext+ext2);
+	file2<<nx<<"\t"<<ny<<"\t"<<h;
+	file2<<std::endl;
+	
+	file2.close();
+	
+	std::cout<<"Writing is done\n";
+	}
+
+void read_rec(const std::string& filename, std::vector <double>& rec)
+{
+	std::ifstream f(filename);
+	double content;
+	while (f >> content)
+	{
+		rec.push_back(content);
+	}
+}
+
+void read_rec_pr(const std::string& filename, int &nx,int &nt,int &xsource,int &ysource, double &h,double &dt)
+{
+	std::ifstream f(filename);
+	int i=0;
+	double content;
+	while (f >> content)
+	{
+		i++;
+		if(i==1){nx=content;}
+		else if(i==2){nt=content;}
+		else if(i==3){h=content;}
+		else if(i==4){dt=content;}
+		else if(i==5){ysource=content;}
+		else if(i==6){xsource=content;}
+	}
+}
+
+void rec_2d(double **rec_out,std::vector <double>& rec, int nx,int nt)
+{
+	for (int i=0;i<nt;i++)
+	{
+		for(int j=0;j<nx;j++)
+		{
+			rec_out[i][j]=rec[i*nx+j];
+		}
+	}
+}
+
