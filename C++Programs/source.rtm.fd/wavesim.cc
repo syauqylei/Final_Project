@@ -239,9 +239,9 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		
 		#pragma acc kernels present(rec[0:nt][0:nx*ny],U[0:5][0:Nx*Ny])
 		{
-		for(int j=1;j<Nx-1;j++)
+		for(int j=2;j<Nx-2;j++)
 			{
-				U[3][Nx+j]=rec[nt-1-i][j-1];
+				U[3][Nx+j]=rec[nt-1-i][j-2];
 			}
 		}
 		
