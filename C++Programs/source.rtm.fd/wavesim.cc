@@ -16,6 +16,8 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx*ny);
 	
+	double **__restrict__ U=alloc_mat(nt,Nx*Ny);
+	
 	//create data on device
 	#pragma acc kernels copyout(U[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
