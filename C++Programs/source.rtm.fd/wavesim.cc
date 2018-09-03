@@ -104,7 +104,7 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 			int pos=stencil[j];
 			double cf1;
 			cf1=vel[j]*vel[j]*dt*dt;
-			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*d2xd2y(U[3],h,pos,Nx)
+			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*d2xd2y(U[3],h,pos,Nx);
 			}
 		
 		//calculate ABC higdon boundary
