@@ -1,7 +1,8 @@
 #pragma acc routine seq
 double d2xd2y(double *U, double h, int pos, int Nx)
 {
-	return (U[pos+1]+U[pos-1]+U[pos+Nx]+U[pos-Nx]-4*U[pos])/h/h;
+	return (-U[pos+2]-U[pos-2]-U[pos+2*Nx]-U[pos-2*Nx]
+			+16.0*U[pos+1]+16.0*U[pos-1]+16.0*U[pos+Nx]+16.0*U[pos-Nx]-60.0*U[pos])/h/h/12.0;
 }
 
 #pragma acc routine seq
