@@ -10,13 +10,11 @@
 
 double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, double dt,double T){
 	int nt=int(T/dt);
-	int Nx=nx+4;
-	int Ny=ny+4;
+	int Nx=nx+2;
+	int Ny=ny+2;
 	
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx*ny);
-	
-	double **__restrict__ U=alloc_mat(5,Nx*Ny);
 	
 	//create data on device
 	#pragma acc kernels copyout(U[:5][:Nx*Ny])
@@ -39,9 +37,9 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 	int *__restrict__ stencil= new int[nx*ny];
 	
 	#pragma acc parallel loop copyin(stencil[0:nx*ny])
-	for (int i=2;i<Ny-2;i++){
-		for (int j=2;j<Nx-2;j++){
-			stencil[(i-2)*nx+j-2]=i*Nx+j;
+	for (int i=1;i<Ny-1;i++){
+		for (int j=1;j<Nx-1;j++){
+			stencil[(i-1)*nx+j-1]=i*Nx+j;
 			}
 		}
 
@@ -78,7 +76,7 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 	
 	#pragma acc enter data copyin(U[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	
-	#pragma acc data copyout(u[0:nt][0:nx]) 
+	#pragma acc data copyout(u[0:nt][0:nx*ny]) 
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -88,11 +86,9 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 		
 		//Top neumann boundary
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny])
-		for (int j=0;j<Nx;j++)
-		{
-			U[3][j]=U[3][j+3*Nx];
-			U[3][j+Nx]=U[3][j+2*Nx];
-		}
+		for (int j=0;j<Nx;j++){
+			U[3][j]=U[3][j+2*Nx];
+				}
 		
 		#pragma acc kernels present(U[0:5][0:Nx*Ny])
 		{
@@ -106,23 +102,22 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 			int pos=stencil[j];
 			double cf1;
 			cf1=vel[j]*vel[j]*dt*dt;
-			
-			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*d2xd2y(U[3],h,pos,Nx);
+			U[4][pos]=2.0*U[3][pos]-U[2][pos]+cf1*d2xd2y(U[3],h,pos,Nx)
 			}
 		
 		//calculate ABC higdon boundary
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],left_sstep[0:81],right_sstep[0:81],tstep[0:81])
-		for (int j=2;j<Ny-2;j++) 
+		for (int j=1;j<Ny-1;j++) 
 		{	
-			U[4][j*Nx+2]=habc(U,left_cfabc[j-2],tstep,left_sstep,j*Nx+2);
-			
-			U[4][(j+1)*Nx-3]=habc(U,right_cfabc[j-2],tstep,right_sstep,(j+1)*Nx-3);
+			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
+
+			U[4][(j+1)*Nx-2]=habc(U,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-2);
 		}
 		
-		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],bottom_cfabc[0:nx][0:81],bottom_sstep[0:81],tstep[0:81])
-		for (int j=2;j<Nx-2;j++)
+		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],tstep[0:81],bottom_cfabc[0:nx][0:81],bottom_sstep[0:81],tstep[0:81])
+		for (int j=1;j<Nx-1;j++)
 		{
-			U[4][Ny*Nx-3*Nx+j]=habc(U,bottom_cfabc[j-2],tstep,bottom_sstep,Ny*Nx-3*Nx+j);
+			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
 		}
 		
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],stencil[0:nx*ny])
@@ -133,6 +128,7 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 			U[1][pos]=U[2][pos];
 			U[2][pos]=U[3][pos];
 			U[3][pos]=U[4][pos];
+			
 		}
 		
 		#pragma acc parallel loop
@@ -155,14 +151,13 @@ double **dg_wve(double *vel, int nx, int ny,int srcloc, double freq,double h, do
 
 double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,double T){
 	int nt=int(T/dt);
-	int Nx=nx+4;
-	int Ny=ny+4;
+	int Nx=nx+2;
+	int Ny=ny+2;
 	
 	//Alloc array to store wavefield
 	double **__restrict__ u=alloc_mat(nt,nx*ny);
 	
 	double **__restrict__ U=alloc_mat(5,Nx*Ny);
-	
 	//create data on device
 	#pragma acc kernels copyout(U[:5][:Nx*Ny])
 	for (int i=0;i<5;i++)
@@ -184,9 +179,9 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 	int *__restrict__ stencil= new int[nx*ny];
 	
 	#pragma acc parallel loop copyin(stencil[0:nx*ny])
-	for (int i=2;i<Ny-2;i++){
-		for (int j=2;j<Nx-2;j++){
-			stencil[(i-2)*nx+j-2]=i*Nx+j;
+	for (int i=1;i<Ny-1;i++){
+		for (int j=1;j<Nx-1;j++){
+			stencil[(i-1)*nx+j-1]=i*Nx+j;
 			}
 		}
 
@@ -222,7 +217,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 	
 	#pragma acc enter data copyin(rec[0:nt][0:nx*ny],U[0:5][0:Nx*Ny],stencil[0:nx*ny],vel[0:nx*ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],bottom_cfabc[0:nx][0:81],left_sstep[0:81],right_sstep[0:81],bottom_sstep[0:81],tstep[0:81])
 	
-	#pragma acc data copyout(u[0:nt][0:nx]) 
+	#pragma acc data copyout(u[0:nt][0:nx*ny]) 
 	for (int i=0; i<nt-1;i++)
 	{
 		//time step./w	
@@ -231,17 +226,15 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		
 		//Top neumann boundary
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny])
-		for (int j=0;j<Nx;j++)
-		{
-			U[3][j]=U[3][j+3*Nx];
-			U[3][j+Nx]=U[3][j+2*Nx];
-		}
+		for (int j=0;j<Nx;j++){
+			U[3][j]=U[3][j+2*Nx];
+				}
 		
 		#pragma acc kernels present(rec[0:nt][0:nx*ny],U[0:5][0:Nx*Ny])
 		{
-		for(int j=2;j<Nx-2;j++)
+		for(int j=1;j<Nx-1;j++)
 			{
-				U[3][2*Nx+j]=rec[nt-1-i][j-2];
+				U[3][Nx+j]=rec[nt-1-i][j-1];
 			}
 		}
 		
@@ -257,17 +250,16 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 		
 		//calculate ABC higdon boundary
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],left_cfabc[0:ny][0:81],right_cfabc[0:ny][0:81],left_sstep[0:81],right_sstep[0:81],tstep[0:81])
-		for (int j=2;j<Ny-2;j++) 
+		for (int j=1;j<Ny-1;j++) 
 		{	
-			U[4][j*Nx+2]=habc(U,left_cfabc[j-2],tstep,left_sstep,j*Nx+2);
-		
-			U[4][(j+1)*Nx-3]=habc(U,right_cfabc[j-2],tstep,right_sstep,(j+1)*Nx-3);
+			U[4][j*Nx+1]=habc(U,left_cfabc[j-1],tstep,left_sstep,j*Nx+1);
+			U[4][(j+1)*Nx-2]=habc(U,right_cfabc[j-1],tstep,right_sstep,(j+1)*Nx-2);
 		}
 		
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],tstep[0:81],bottom_cfabc[0:nx][0:81],bottom_sstep[0:81],tstep[0:81])
-		for (int j=2;j<Nx-2;j++)
+		for (int j=1;j<Nx-1;j++)
 		{
-			U[4][Ny*Nx-3*Nx+j]=habc(U,bottom_cfabc[j-2],tstep,bottom_sstep,Ny*Nx-3*Nx+j);
+			U[4][Ny*Nx-Nx+j]=habc(U,bottom_cfabc[j-1],tstep,bottom_sstep,Ny*Nx-Nx+j);
 		}
 		
 		#pragma acc parallel loop present(U[0:5][0:Nx*Ny],stencil[0:nx*ny])
@@ -278,6 +270,7 @@ double **ug_wve(double **rec,double *vel, int nx, int ny,double h,double dt,doub
 			U[1][pos]=U[2][pos];
 			U[2][pos]=U[3][pos];
 			U[3][pos]=U[4][pos];
+
 		}
 		
 		#pragma acc parallel loop
