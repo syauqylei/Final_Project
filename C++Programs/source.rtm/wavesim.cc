@@ -373,6 +373,10 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 	double **__restrict__ Ib = alloc_mat(ny,nx);
 	double **__restrict__ I = alloc_mat(ny,nx);
 	
+	double **__restrict__ Imcon = alloc_mat(nt,nx*ny);
+	double **__restrict__ Image = alloc_mat(nt,nx*ny);
+	double **__restrict__ Vel = alloc_mat(nt,nx*ny);
+	
 	for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
@@ -382,8 +386,12 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			}
 		}
 	
+	int a=0;
 	for (int i=0;i<nt;i++)
 	{
+		if( i==0){a=0;}
+		else {a=i-1;}
+		
 		for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
@@ -391,9 +399,18 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 				int id=idx(j,k,nx);
 				Ia[j][k]+=ug[nt-1-i][id]*dg[i][id];
 				Ib[j][k]+=ug[i][id]*ug[i][id]+0.0000001;
+				
+				Imcon[i][j*nx+k]=Ia[j][k]/Ib[j][k];
+				Image[i][j*nx+k]+=Image[a][j*nx+k]+Ia[j][k]/Ib[j][k];
 			}
 		}
 	}
+	
+	w_dat("image",Vel, Image,dt,h,nt,nx,ny,1,1,-1,1);
+	w_dat("image",Vel, Imcon,dt,h,nt,nx,ny,1,1,-1,1);
+	w_dat("downgoing",Vel,dg,dt,h,nt,nx,ny,1,1,-1,1);
+	w_dat("upgoing",Vel, ug,dt,h,nt,nx, ny,1,1,-1,1);
+	
 	for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
@@ -404,6 +421,9 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 
 	free_mat_mem(Ia);
 	free_mat_mem(Ib);
+	
+	free_mat_mem(Imcon);
+	free_mat_mem(Image);
 
 	return I;
 }

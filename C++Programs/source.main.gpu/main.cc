@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 		u=wvenacd(Velocity,nx,ny,src_loc,freq,h,dt,T);
 		int end=std::clock();
 		std::cout << "time: " << (end-start)/double(CLOCKS_PER_SEC)*1000 << std::endl;
-		write_rec_txt(argv[1], u,srcloc[i],srcloc[ns+i],h,dt, nx,ny,nt);
+		w_dat(argv[1],Velocity,u,dt,h,nt,nx,ny,1,1,-1, 1);
 		}
 	free_mat_mem(u);
 	}
