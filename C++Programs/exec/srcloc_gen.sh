@@ -14,7 +14,7 @@ done
 for i in {10..940..20}
 do
 	par1="./rec$i"
-	par2="./velbp2004new.txt"
+	par2="./Velocity.txt"
 	par3="./setfile$i.txt"
 	./wve_nacdgpu $par1 $par2 $par3
 done
