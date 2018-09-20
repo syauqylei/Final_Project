@@ -90,19 +90,19 @@ U4[-2,-2:]=U[-1,-2:]
 err1=np.zeros(nt-1)
 err2=np.zeros(nt-1)
 err3=np.zeros(nt-1)
+
 for i in range(nt-1):
-    err1[i]=sqrt(sum((U[i]-U2[i+1])**2)/sum(U[i]**2))*100
-    err2[i]=sqrt(sum((U[i]-Unacd[i+1])**2)/sum(U[i]**2))*100
-    err3[i]=sqrt(sum((U[i]-U4[i+1])**2)/sum(U[i]**2))*100
+    err1[i]=sqrt(sum((U[i]-U2[i+1])**2)/sum(U[i]**2))
+    err2[i]=sqrt(sum((U[i]-Unacd[i+1])**2)/sum(U[i]**2))
+    err3[i]=sqrt(sum((U[i]-U4[i+1])**2)/sum(U[i]**2))
 
 xx=np.linspace(0,2,nt-1)
 plt.semilogy(xx,err1,"r-",label="FD2",linewidth=0.4)
 plt.semilogy(xx,err3,"g-",label="FD4",linewidth=0.4)
 plt.semilogy(xx,err2,"b-",label="NACD",linewidth=0.4)
 plt.legend()
-plt.ylim(1e-1,1e+2)
+plt.ylim(ymin=1e-3)
 plt.xlim(0,2)
 plt.xlabel("Waktu (s)")
-plt.ylabel("Error Relatif (%)")
-plt.savefig("Figures/Graphic_of_errors.eps")
+plt.ylabel("MSE")
 plt.show()
