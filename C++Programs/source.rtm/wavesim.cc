@@ -398,19 +398,10 @@ double **imcon(double **ug, double **dg, int nx, int ny, int nt)
 			{
 				int id=idx(j,k,nx);
 				Ia[j][k]+=ug[nt-1-i][id]*dg[i][id];
-				Ib[j][k]+=ug[i][id]*ug[i][id]+0.0000001;
-				
-				Imcon[i][j*nx+k]=Ia[j][k]/Ib[j][k];
-				Image[i][j*nx+k]+=Image[a][j*nx+k]+Ia[j][k]/Ib[j][k];
+				Ib[j][k]+=dg[i][id]*dg[i][id]+0.0000001;
 			}
 		}
 	}
-	
-	w_dat("image",Vel, Image,dt,h,nt,nx,ny,1,1,-1,1);
-	w_dat("image",Vel, Imcon,dt,h,nt,nx,ny,1,1,-1,1);
-	w_dat("downgoing",Vel,dg,dt,h,nt,nx,ny,1,1,-1,1);
-	w_dat("upgoing",Vel, ug,dt,h,nt,nx, ny,1,1,-1,1);
-	
 	for(int j=0;j<ny;j++)
 		{
 			for(int k=0;k<nx;k++)
